@@ -53,4 +53,10 @@ interface CreditCalculatorInterface {
 	 * @return float ежемесячный платеж, руб.
 	 */
 	public function getMonthlyPayment();
+
+	/**
+	 * Расчет стоимости каско, руб
+	 * @return decimal(65.2) расчет стоимости каско, руб
+	 */
+	public function getCascoPrice();
 }

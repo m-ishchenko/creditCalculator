@@ -9,6 +9,9 @@ use creditCalc\CreditCalculatorValidatorsTrait;
 /**
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @todo Добавить расчет КАСКО, остаточный платеж
+ * 
+ * Каско - ок. 6% от стоимости а/м
+ * Каско прибавляется к сумме кредита, также начисляются %
  */
 class CreditCalculator implements CreditCalculatorInterface
 {
@@ -24,7 +27,25 @@ class CreditCalculator implements CreditCalculatorInterface
 	 */
 	const MONTHS_IN_YEAR = 12;
 
-	public $casco = 1;
+	/**
+	 * Процент от цены для расчета суммы каско
+	 * @var integer
+	 */
+	public $cascoPercentages;
+
+	/**
+	 * Учитывать каско
+	 * @access public
+	 * @var integer
+	 */
+	public $casco;
+
+	/**
+	 * Сумма каско
+	 * @access private
+	 * @var decimal(65.2)
+	 */
+	private $cascoPrice;
 
 	/**
 	 * Итоговая стоимость а/м
@@ -61,7 +82,7 @@ class CreditCalculator implements CreditCalculatorInterface
 	 * @param integer $creditTime             срок кредита, мес
 	 * @param decimal(65.2) $interestRate             процентная ставка, мес
 	 */
-	function __construct($carPrice, $firstPaymentPercentage, $creditTime, $interestRate)
+	function __construct($carPrice, $firstPaymentPercentage, $creditTime, $interestRate, $casco = 0, $cascoPercentages)
 	{
 
 		/**
@@ -82,6 +103,10 @@ class CreditCalculator implements CreditCalculatorInterface
 		$this->firstPaymentPercentage = $firstPaymentPercentage;
 		$this->creditTime = $creditTime;
 		$this->interestRate = $interestRate;
+		$this->casco = $casco;
+
+		$this->cascoPercentages = $cascoPercentages;
+		$this->cascoPrice = ($this->casco == 1) ? $this->setCascoPrice() : 0;
 	}
 
 	/**
@@ -98,7 +123,14 @@ class CreditCalculator implements CreditCalculatorInterface
 	 * @return decimal(65.2) сумма первоначального взноса
 	 */
 	public function getInitialPayment() {
-		$initialPayment = ($this->carPrice * $this->firstPaymentPercentage) / self::PERCENTAGES_100;
+
+		if($this->casco == 1) {
+			$carPrice = $this->carPrice + $this->getCascoPrice();
+			$initialPayment = ($carPrice * $this->firstPaymentPercentage) / self::PERCENTAGES_100;
+		} else {
+			$initialPayment = ($this->carPrice * $this->firstPaymentPercentage) / self::PERCENTAGES_100;
+		}
+
 		return $this->setRoundedValue($initialPayment);
 	}
 
@@ -116,6 +148,7 @@ class CreditCalculator implements CreditCalculatorInterface
 	 */
 	public function getAmountOfCredit() {
 		$amount = $this->carPrice - $this->getInitialPayment();
+		$amount = ($this->casco == 1) ? $amount + $this->cascoPrice : $amount;
 		return $this->setRoundedValue($amount);
 	}
 
@@ -157,6 +190,10 @@ class CreditCalculator implements CreditCalculatorInterface
 		return $this->setRoundedValue($payment);		
 	}
 
+	public function getCascoPrice() {
+		return $this->setRoundedValue($this->cascoPrice);
+	}
+
 	/**
 	 * Расчет числового коэффициента значения процентной ставки
 	 * @access private
@@ -183,5 +220,15 @@ class CreditCalculator implements CreditCalculatorInterface
 	private function getAnnuityCoefficient() {
 		$i = pow(1 + $this->getMonthlyPercentages(), $this->creditTime);
 		return ($this->getMonthlyPercentages() * $i) / ($i - 1);
+	}
+
+	/**
+	 * Расчет стоимости каско, руб
+	 * @access private
+	 * @return  decimal(65.2), стоимость каско, руб
+	 */
+	private function setCascoPrice() {
+		$cascoPercentages = $this->getCarPrice() * $this->cascoPercentages / self::PERCENTAGES_100;
+		return $this->setRoundedValue($cascoPercentages);		
 	}
 }

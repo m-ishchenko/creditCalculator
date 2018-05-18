@@ -7,6 +7,8 @@ $carPrice = 2819900;
 $firstPaymentPercentage = 30;
 $creditTime = 36;
 $interestRate = 14.8;
+$casco = 1;
+$cascoPercentages = 0.71;
 
 /**
  * @todo реализовать передачу аргуметов средствами DTO
@@ -15,10 +17,10 @@ $creditCalculator = new CreditCalculator(
 		$carPrice,
 		$firstPaymentPercentage,
 		$creditTime,
-		$interestRate
+		$interestRate,
+		$casco,
+		$cascoPercentages
 	);
-
-$creditCalculator->casco = 1;
 
 
 echo 'Стоимость а/м, руб: ';
@@ -41,3 +43,9 @@ echo $creditCalculator->getInterestRate();
 
 echo '<br/>Ежемесячный платеж, руб.: ';
 echo $creditCalculator->getMonthlyPayment();
+
+echo '<br/>Стоимость КАСКО, руб.: ';
+echo $creditCalculator->getCascoPrice();
+
+
+//1973930
