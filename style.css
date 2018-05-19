@@ -1,33 +1,55 @@
-
-
-input, select {
-	margin-bottom: 15px;
-}
-
 h1 {
 	margin-left: 50px;
 }
 
+a {
+	margin-left: 15px;
+}
+
+.submit {
+	margin-left: 15px;
+}
+
 .credit-data {
 	top: 0;
-	width: 28%;
+	width: 30%;
 	margin-left: 50px;
 	display: inline-block;
 	position: relative;
+    vertical-align:top;
 }
 
 .credit-values {
 	top: 0;
-	width: 65%;
+	float: right;
+	margin-right: 50px;
+	width: 60%;
 	display: inline-block;
 	position: relative;
+    vertical-align:top;
 }
 
 th, td {
-    border-bottom: 1px solid #ddd;
     font-size: 14px;
-}
-th, td {
     padding: 15px;
     text-align: left;
 }
+.credit-table th, .credit-table td {
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    padding: 15px;
+    text-align: left;
+}
+
+table {
+	margin-bottom: 30px;
+}
+
+
+@media print
+{
+	body * { visibility: hidden; }
+	#printableArea * { visibility: visible; }
+	#printableArea { position: absolute; top: 40px; left: 30px; }
+}
+

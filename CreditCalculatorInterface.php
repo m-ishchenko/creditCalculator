@@ -2,7 +2,7 @@
 namespace creditCalc;
 
 /**
- * 
+ * @author  Maxim Ishchenko <maxim.ishchenko@gmail.com>
  */
 interface CreditCalculatorInterface {
 
@@ -59,4 +59,22 @@ interface CreditCalculatorInterface {
 	 * @return decimal(65.2) расчет стоимости каско, руб
 	 */
 	public function getCascoPrice();
+
+	/**
+	 * Расчет стоимости страхования жизни, руб
+	 * @return decimal(65.2) расчет стоимости страхования жизни, руб
+	 */
+	public function getInsurancePrice();
+
+	/**
+	 * Возвращает процентную ставку расчета КАСКО, %
+	 * @return integer процентная ставка расчета КАСКО, %
+	 */
+	public function getCascoPercentages();
+
+	/**
+	 * Возвращает процентную ставку расчета страхования жизни, %
+	 * @return integer процентная ставка страхования жизни, %
+	 */
+	public function getInsurancePercentages();
 }

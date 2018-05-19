@@ -8,7 +8,8 @@ use creditCalc\CreditCalculatorValidatorsTrait;
 
 /**
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @todo Добавить расчет КАСКО, остаточный платеж
+ * @todo Добавить расчет КАСКО, остаточный платеж, страхование жизни
+ * @todo Проверить расчет КАСКО, страхование жизни
  * 
  * Каско - ок. 6% от стоимости а/м (на текущий момент, в качестве примера - 0.71)
  * Каско прибавляется к сумме кредита, также начисляются %
@@ -29,9 +30,10 @@ class CreditCalculator implements CreditCalculatorInterface
 
 	/**
 	 * Процент от цены для расчета суммы каско
-	 * @var integer
+	 * @access  private
+	 * @var integer процент стоимости а/м
 	 */
-	public $cascoPercentages;
+	private $cascoPercentages;
 
 	/**
 	 * Учитывать каско
@@ -46,6 +48,27 @@ class CreditCalculator implements CreditCalculatorInterface
 	 * @var decimal(65.2)
 	 */
 	private $cascoPrice;
+
+	/**
+	 * Учитывать страхование жизни
+	 * @access  public
+	 * @var integer
+	 */
+	public $insurance;
+
+	/**
+	 * Процент от стоимости а/м для расчета суммы страхования жизни
+	 * @access  private
+	 * @var integer процент стоимости а/м
+	 */
+	private $insurancePercentages;
+
+	/**
+	 * Сумма страхования жизни, руб
+	 * @access  public
+	 * @var decimal(65.2) страхование жизни, руб
+	 */
+	private $insurancePrice;
 
 	/**
 	 * Итоговая стоимость а/м
@@ -82,8 +105,16 @@ class CreditCalculator implements CreditCalculatorInterface
 	 * @param integer $creditTime             срок кредита, мес
 	 * @param decimal(65.2) $interestRate             процентная ставка, мес
 	 */
-	function __construct($carPrice, $firstPaymentPercentage, $creditTime, $interestRate, $casco = 0, $cascoPercentages)
-	{
+	function __construct(
+			$carPrice,
+			$firstPaymentPercentage,
+			$creditTime,
+			$interestRate,
+			$casco = 0,
+			$cascoPercentages,
+			$insurance = 0,
+			$insurancePercentages
+		) {
 
 		/**
 		 * Валидация переданных значений
@@ -107,6 +138,10 @@ class CreditCalculator implements CreditCalculatorInterface
 
 		$this->cascoPercentages = $cascoPercentages;
 		$this->cascoPrice = ($this->casco == 1) ? $this->setCascoPrice() : 0;
+
+		$this->insurance = $insurance;
+		$this->insurancePercentages = $insurancePercentages;
+		$this->insurancePrice = ($this->insurance == 1) ? $this->setInsurancePrice() : 0;
 	}
 
 	/**
@@ -186,12 +221,46 @@ class CreditCalculator implements CreditCalculatorInterface
 	 * @return float ежемесячный платеж, руб
 	 */
 	public function getMonthlyPayment() {
-		$payment = $this->getAnnuityCoefficient() * $this->getAmountOfCredit();
+		$creditAmount = $this->getAmountOfCredit();
+		$creditAmount = ($this->insurance == 1) ? $creditAmount + $this->insurancePrice : $creditAmount;
+		$payment = $this->getAnnuityCoefficient() * $creditAmount;
 		return $this->setRoundedValue($payment);		
 	}
 
+	/**
+	 * Расчет стоимости КАСКО, руб
+	 * @access  public
+	 * @return decimal(65.2) стоимость КАСКО, руб
+	 */
 	public function getCascoPrice() {
 		return $this->setRoundedValue($this->cascoPrice);
+	}
+
+	/**
+	 * Расчет стоимости страхования жизни, руб
+	 * @access  public
+	 * @return decimal(65.2) стоимость страхования жизни, руб
+	 */
+	public function getInsurancePrice() {
+		return $this->setRoundedValue($this->insurancePrice);
+	}
+
+	/**
+	 * Возвращает размер процентной ставки для расчета стоимости КАСКО, %
+	 * @access  public
+	 * @return integer размер процентной ставки для расчета стоимости КАСКО, %
+	 */
+	public function getCascoPercentages() {
+		return $this->cascoPercentages;
+	}
+
+	/**
+	 * Возвращает размер процентной ставки для расчета страхования жизни, %
+	 * @access  public
+	 * @return integer процентная ставка для расчета страхования жизни, %
+	 */
+	public function getInsurancePercentages() {
+		return $this->insurancePercentages;
 	}
 
 	/**
@@ -229,6 +298,13 @@ class CreditCalculator implements CreditCalculatorInterface
 	 */
 	private function setCascoPrice() {
 		$cascoPercentages = $this->getCarPrice() * $this->cascoPercentages / self::PERCENTAGES_100;
+		// $cascoPercentages = $this->getAmountOfCredit() * $this->cascoPercentages / self::PERCENTAGES_100;
 		return $this->setRoundedValue($cascoPercentages);		
 	}
+
+	private function setInsurancePrice() {
+		$insurancePercentages = $this->getAmountOfCredit() * $this->insurancePercentages / self::PERCENTAGES_100;
+		return $this->setRoundedValue($insurancePercentages);	
+	}
 }
+
