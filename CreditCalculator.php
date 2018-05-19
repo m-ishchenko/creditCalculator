@@ -10,7 +10,7 @@ use creditCalc\CreditCalculatorValidatorsTrait;
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @todo Добавить расчет КАСКО, остаточный платеж
  * 
- * Каско - ок. 6% от стоимости а/м
+ * Каско - ок. 6% от стоимости а/м (на текущий момент, в качестве примера - 0.71)
  * Каско прибавляется к сумме кредита, также начисляются %
  */
 class CreditCalculator implements CreditCalculatorInterface
