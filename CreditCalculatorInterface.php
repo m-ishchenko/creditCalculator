@@ -77,4 +77,10 @@ interface CreditCalculatorInterface {
 	 * @return integer процентная ставка страхования жизни, %
 	 */
 	public function getInsurancePercentages();
+
+	/**
+	 * Расчет стоимости остаточного платежа, руб.
+	 * @return decimal(65.2) стоимость остаточного платежа, руб.
+	 */
+	public function getDeferredPayentPrice();
 }

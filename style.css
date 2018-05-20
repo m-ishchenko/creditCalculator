@@ -51,5 +51,7 @@ table {
 	body * { visibility: hidden; }
 	#printableArea * { visibility: visible; }
 	#printableArea { position: absolute; top: 40px; left: 30px; }
+	.credit-values {width: 100%; margin: 0;}
+	.credit-data {display: none;}
 }
 

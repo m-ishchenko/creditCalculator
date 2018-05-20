@@ -31,7 +31,8 @@ if($config->debug) {
 	<hr>
 
 	<div class="credit-data" id="credit-data">
-		<form action="/" method="get">
+		<form id="credit-user-data" action="/" method="get">
+		<!-- <form id="credit-user-data" action="/calculateCredit.php" method="post"> -->
 
 			<table>
 				<tr>
@@ -160,7 +161,7 @@ if($config->debug) {
 						Сумма кредита
 					</td>
 					<td>
-						<?php echo $creditCalculator->getCarPrice(); ?>  &#8381;
+						<?php echo $creditCalculator->getAmountOfCredit(); ?>  &#8381;
 					</td>
 					<td>
 						Процентная ставка
@@ -264,6 +265,22 @@ if($config->debug) {
 </html>
 
 <script type="text/javascript">
+
+	function proceedAjaxCalculate(e) {
+		// e.preventDefault();
+		console.log('proceedAjaxCalculate');
+		// document.getElementById("credit-user-data").submit();
+
+	}
+	
+	var creditInputForm = document.getElementById('credit-user-data');
+	if(creditInputForm.addEventListener){
+	    creditInputForm.addEventListener("submit", proceedAjaxCalculate, false);  //Modern browsers
+	}else if(creditInputForm.attachEvent){
+	    creditInputForm.attachEvent('onsubmit', proceedAjaxCalculate);            //Old IE
+	}
+
+
 	document.querySelector("#print").addEventListener("click", function() {
 		window.print();
 	});

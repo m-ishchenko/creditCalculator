@@ -222,8 +222,10 @@ class CreditCalculator implements CreditCalculatorInterface
 	 */
 	public function getMonthlyPayment() {
 		$creditAmount = $this->getAmountOfCredit();
-		$creditAmount = ($this->insurance == 1) ? $creditAmount + $this->insurancePrice : $creditAmount;
+		// $creditAmount = ($this->insurance == 1) ? $creditAmount + $this->insurancePrice : $creditAmount;
 		$payment = $this->getAnnuityCoefficient() * $creditAmount;
+
+		$payment = ($this->insurance == 1) ? $payment + ($this->insurancePrice / $this->creditTime) : $payment;
 		return $this->setRoundedValue($payment);		
 	}
 
@@ -261,6 +263,10 @@ class CreditCalculator implements CreditCalculatorInterface
 	 */
 	public function getInsurancePercentages() {
 		return $this->insurancePercentages;
+	}
+
+	public function getDeferredPayentPrice() {
+		
 	}
 
 	/**
