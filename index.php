@@ -32,7 +32,6 @@ if($config->debug) {
 
 	<div class="credit-data" id="credit-data">
 		<form id="credit-user-data" action="/" method="get">
-		<!-- <form id="credit-user-data" action="/calculateCredit.php" method="post"> -->
 
 			<table>
 				<tr>
