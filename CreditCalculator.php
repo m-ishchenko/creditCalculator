@@ -8,11 +8,7 @@ use creditCalc\CreditCalculatorValidatorsTrait;
 
 /**
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @todo Добавить расчет КАСКО, остаточный платеж, страхование жизни
- * @todo Проверить расчет КАСКО, страхование жизни
- * 
- * Каско - ок. 6% от стоимости а/м (на текущий момент, в качестве примера - 0.71)
- * Каско прибавляется к сумме кредита, также начисляются %
+ * @todo  добавить комментарии к вычислениям, проверить трейт валидации
  */
 class CreditCalculator implements CreditCalculatorInterface
 {
@@ -211,7 +207,6 @@ class CreditCalculator implements CreditCalculatorInterface
 	public function getAmountOfCredit() {
 		$amount = $this->carPrice - $this->getInitialPayment();
 		$amount = ($this->casco == 1) ? $amount + $this->cascoPrice : $amount;
-		// $amount = ($this->deferred == 1) ? $amount - $this->deferredPrice : $amount;
 		return $this->setRoundedValue($amount);
 	}
 
@@ -234,16 +229,6 @@ class CreditCalculator implements CreditCalculatorInterface
 	}
 
 	/**
-	 * Расчет первого (льготного) платежа, руб
-	 * @access public
-	 * @return decimal(65.2) первый (льготный) платеж, руб
-	 */
-	// public function getFirstPayment() {
-	// 	$firstPayment = $this->getAmountOfCredit() * $this->getMonthlyPercentages();
-	// 	return $this->setRoundedValue($firstPayment);
-	// }
-
-	/**
 	 * Расчет ежемесячного платежа, руб
 	 * @access public
 	 * @return float ежемесячный платеж, руб
@@ -251,7 +236,6 @@ class CreditCalculator implements CreditCalculatorInterface
 	public function getMonthlyPayment() {
 		$creditAmount = $this->getAmountOfCredit();
 		$creditAmount = ($this->deferred == 1) ? $creditAmount - $this->deferredPrice : $creditAmount;
-		// $creditAmount = ($this->insurance == 1) ? $creditAmount + $this->insurancePrice : $creditAmount;
 		$payment = $this->getAnnuityCoefficient() * $creditAmount;
 
 		$payment = ($this->insurance == 1) ? $payment + ($this->insurancePrice / $this->creditTime) : $payment;
@@ -359,7 +343,6 @@ class CreditCalculator implements CreditCalculatorInterface
 	 */
 	private function setCascoPrice() {
 		$cascoPercentages = $this->getCarPrice() * $this->cascoPercentages / self::PERCENTAGES_100;
-		// $cascoPercentages = $this->getAmountOfCredit() * $this->cascoPercentages / self::PERCENTAGES_100;
 		return $this->setRoundedValue($cascoPercentages);		
 	}
 

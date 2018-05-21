@@ -43,12 +43,6 @@ interface CreditCalculatorInterface {
 	public function getInterestRate();
 
 	/**
-	 * Расчет первого (льготного) платежа, руб
-	 * @return decimal(65.2) первый (льготный) платеж, руб
-	 */
-	// public function getFirstPayment();
-
-	/**
 	 * Расчет ежемесячного платежа, руб.
 	 * @return float ежемесячный платеж, руб.
 	 */
