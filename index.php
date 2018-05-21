@@ -286,47 +286,4 @@ if($config->debug) {
 	</body>
 </html>
 
-<script type="text/javascript">
-
-	function proceedAjaxCalculate(e) {
-		// e.preventDefault();
-		console.log('proceedAjaxCalculate');
-		// document.getElementById("credit-user-data").submit();
-
-	}
-	
-	var creditInputForm = document.getElementById('credit-user-data');
-	if(creditInputForm.addEventListener){
-	    creditInputForm.addEventListener("submit", proceedAjaxCalculate, false);  //Modern browsers
-	}else if(creditInputForm.attachEvent){
-	    creditInputForm.attachEvent('onsubmit', proceedAjaxCalculate);            //Old IE
-	}
-
-
-	/**
-	 * [toggleByCheckbox description]
-	 * @param  {[type]} checkboxID [description]
-	 * @param  {[type]} blockID    [description]
-	 * @return {[type]}            [description]
-	 */
-	function toggleByCheckbox(checkboxID, blockID) {
-		var checkBox = document.getElementById(checkboxID);
-		var block = document.getElementById(blockID);
-
-		if (checkBox.checked == true){
-		  block.style.visibility = "unset";
-		} else {
-		  block.style.visibility = "hidden";
-		}
-	}
-
-
-	/**
-	 * Функция печати расчета
-	 * @param  {[type]} ) {		window.print();	} [description]
-	 * @return {[type]}   [description]
-	 */
-	document.querySelector("#print").addEventListener("click", function() {
-		window.print();
-	});
-</script>
+<script type="text/javascript" src="main.js"></script>
