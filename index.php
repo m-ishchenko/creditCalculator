@@ -72,10 +72,17 @@ if($config->debug) {
 				</tr>
 				<tr>
 					<td>
-						<label for="deferredPayment">Отложенный платеж</label>						
+						<label for="deferred">Отложенный платеж</label>
 					</td>
-					<td>					
-						<select name="deferredPayment" id="deferredPayment" required>
+					<td>
+						<?php
+							$isDeferredChecked = (isset($_GET['deferred']) && $_GET['deferred'] == 1) ? true : false;
+							$isDeferredVisible = (isset($_GET['deferred']) && $_GET['deferred'] == 1) ? 'visibility: unset' : 'visibility: hidden';
+						?>
+						<input type="checkbox" name="deferred" class="deferred" id="deferred" value="1" <?php echo ($isDeferredChecked) ? 'checked' : 0; ?> onclick="toggleByCheckbox('deferred', 'deferredPayment');">
+
+
+						<select name="deferredPayment" id="deferredPayment" style="<?php echo $isDeferredVisible; ?>" required>
 							<?php foreach ($config->deferredPaymentArray as $key => $deferredPaymentValue) : ?>
 								<?php $deferredSelected = ($deferredPaymentValue == $_GET['deferredPayment']) ? 'selected' : 0; ?>
 								<option value="<?php echo $deferredPaymentValue; ?>" <?php echo $deferredSelected; ?> > <?php echo $deferredPaymentValue; ?> %</option>
@@ -83,6 +90,7 @@ if($config->debug) {
 						</select>
 					</td>
 				</tr>
+
 				<tr>
 					<td>
 						<label for="casco">КАСКО</label>
@@ -120,6 +128,9 @@ if($config->debug) {
 	$creditTime = intval($_GET['creditTime']); //36
 	$casco = isset($_GET['casco']) && !empty($_GET['casco']) ? $_GET['casco'] : 0; //1
 	$insurance = isset($_GET['insurance']) && !empty($_GET['insurance']) ? $_GET['insurance'] : 0; //1
+	$deferred = isset($_GET['deferred']) && !empty($_GET['deferred']) ? intval($_GET['deferred']) : 0; //1
+	$deferredPercentages = intval($_GET['deferredPayment']); //30
+
 
 
 	$creditCalculator = new CreditCalculator(
@@ -130,10 +141,13 @@ if($config->debug) {
 			$casco,
 			$config->cascoPercentages,
 			$insurance,
-			$config->insurancePercentages
+			$config->insurancePercentages,
+			$deferred,
+			$deferredPercentages
 		);
 
 	$creditCalculator->roundCoefficient = 0;
+
 	?>
 
 	<div class="credit-values">
@@ -175,8 +189,12 @@ if($config->debug) {
 					<td>
 						<?php echo $creditCalculator->getInsurancePercentages(); ?> %
 					</td>
-					<td></td>
-					<td></td>
+					<td>
+						Процентная ставка
+					</td>
+					<td>
+						<?php echo $creditCalculator->getDeferredPercentages(); ?> %						
+					</td>
 				</tr>
 				<tr>
 					<td>2</td>
@@ -198,8 +216,12 @@ if($config->debug) {
 					<td>
 						<?php echo $creditCalculator->getInsurancePrice(); ?> &#8381;
 					</td>
-					<td></td>
-					<td></td>
+					<td>
+						Размер отложенного платежа
+					</td>
+					<td>
+						<?php echo $creditCalculator->getDeferredPaymentPrice(); ?> &#8381;
+					</td>
 				</tr>
 				<tr>
 					<td>3</td>
@@ -281,6 +303,29 @@ if($config->debug) {
 	}
 
 
+	/**
+	 * [toggleByCheckbox description]
+	 * @param  {[type]} checkboxID [description]
+	 * @param  {[type]} blockID    [description]
+	 * @return {[type]}            [description]
+	 */
+	function toggleByCheckbox(checkboxID, blockID) {
+		var checkBox = document.getElementById(checkboxID);
+		var block = document.getElementById(blockID);
+
+		if (checkBox.checked == true){
+		  block.style.visibility = "unset";
+		} else {
+		  block.style.visibility = "hidden";
+		}
+	}
+
+
+	/**
+	 * Функция печати расчета
+	 * @param  {[type]} ) {		window.print();	} [description]
+	 * @return {[type]}   [description]
+	 */
 	document.querySelector("#print").addEventListener("click", function() {
 		window.print();
 	});

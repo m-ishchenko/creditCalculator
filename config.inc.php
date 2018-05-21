@@ -53,7 +53,7 @@ return (object) array(
     /**
      * % от стоимости а/м для расчета отложенного платежа
      */
-    'deferredPaymentArray' => array(0, 20, 30, 40),
+    'deferredPaymentArray' => array(20, 30, 40),
 );
 
 ?>

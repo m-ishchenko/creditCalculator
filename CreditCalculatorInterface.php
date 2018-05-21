@@ -82,5 +82,11 @@ interface CreditCalculatorInterface {
 	 * Расчет стоимости остаточного платежа, руб.
 	 * @return decimal(65.2) стоимость остаточного платежа, руб.
 	 */
-	public function getDeferredPayentPrice();
+	public function getDeferredPaymentPrice();
+
+	/**
+	 * Возвращает процентную ставку отложенного платежа, %
+	 * @return integer процентная ставка отложенного платежа, %
+	 */
+	public function getDeferredPercentages();
 }

@@ -52,7 +52,7 @@ class CreditCalculator implements CreditCalculatorInterface
 	/**
 	 * Учитывать страхование жизни
 	 * @access  public
-	 * @var integer
+	 * @var bool true|false
 	 */
 	public $insurance;
 
@@ -69,6 +69,26 @@ class CreditCalculator implements CreditCalculatorInterface
 	 * @var decimal(65.2) страхование жизни, руб
 	 */
 	private $insurancePrice;
+
+	/**
+	 * Учитывать отложенный платеж
+	 * @access  public
+	 * @var bool true|false
+	 */
+	public $deferred;
+
+	/**
+	 * Процент от первоначальной стоимости а/м для расчета суммы отложенного платежа, %
+	 * @access  private
+	 * @var integer процент стоимости а/м, %
+	 */
+	private $deferredPercentages;
+
+	/**
+	 * Сумма отложенного платежа, руб
+	 * @var decimal(65.2) сумма отложенного платежа, руб
+	 */
+	private $deferredPrice;
 
 	/**
 	 * Итоговая стоимость а/м
@@ -113,7 +133,9 @@ class CreditCalculator implements CreditCalculatorInterface
 			$casco = 0,
 			$cascoPercentages,
 			$insurance = 0,
-			$insurancePercentages
+			$insurancePercentages,
+			$deferred,
+			$deferredPercentages
 		) {
 
 		/**
@@ -134,14 +156,18 @@ class CreditCalculator implements CreditCalculatorInterface
 		$this->firstPaymentPercentage = $firstPaymentPercentage;
 		$this->creditTime = $creditTime;
 		$this->interestRate = $interestRate;
-		$this->casco = $casco;
 
+		$this->casco = $casco;
 		$this->cascoPercentages = $cascoPercentages;
 		$this->cascoPrice = ($this->casco == 1) ? $this->setCascoPrice() : 0;
 
 		$this->insurance = $insurance;
 		$this->insurancePercentages = $insurancePercentages;
 		$this->insurancePrice = ($this->insurance == 1) ? $this->setInsurancePrice() : 0;
+
+		$this->deferred = $deferred;
+		$this->deferredPercentages = $deferredPercentages;
+		$this->deferredPrice = ($this->deferred == 1) ? $this->setDeferredPrice() : 0;
 	}
 
 	/**
@@ -150,7 +176,8 @@ class CreditCalculator implements CreditCalculatorInterface
 	 * @return decimal(65.2) заявленная стоимость а/м
 	 */
 	public function getCarPrice() {
-		return $this->setRoundedValue($this->carPrice);
+		$carPrice = $this->carPrice;
+		return $this->setRoundedValue($carPrice);
 	}
 
 	/**
@@ -160,10 +187,10 @@ class CreditCalculator implements CreditCalculatorInterface
 	public function getInitialPayment() {
 
 		if($this->casco == 1) {
-			$carPrice = $this->carPrice + $this->getCascoPrice();
+			$carPrice = $this->getCarPrice() + $this->getCascoPrice();
 			$initialPayment = ($carPrice * $this->firstPaymentPercentage) / self::PERCENTAGES_100;
 		} else {
-			$initialPayment = ($this->carPrice * $this->firstPaymentPercentage) / self::PERCENTAGES_100;
+			$initialPayment = ($this->getCarPrice() * $this->firstPaymentPercentage) / self::PERCENTAGES_100;
 		}
 
 		return $this->setRoundedValue($initialPayment);
@@ -184,6 +211,7 @@ class CreditCalculator implements CreditCalculatorInterface
 	public function getAmountOfCredit() {
 		$amount = $this->carPrice - $this->getInitialPayment();
 		$amount = ($this->casco == 1) ? $amount + $this->cascoPrice : $amount;
+		// $amount = ($this->deferred == 1) ? $amount - $this->deferredPrice : $amount;
 		return $this->setRoundedValue($amount);
 	}
 
@@ -222,12 +250,25 @@ class CreditCalculator implements CreditCalculatorInterface
 	 */
 	public function getMonthlyPayment() {
 		$creditAmount = $this->getAmountOfCredit();
+		$creditAmount = ($this->deferred == 1) ? $creditAmount - $this->deferredPrice : $creditAmount;
 		// $creditAmount = ($this->insurance == 1) ? $creditAmount + $this->insurancePrice : $creditAmount;
 		$payment = $this->getAnnuityCoefficient() * $creditAmount;
 
 		$payment = ($this->insurance == 1) ? $payment + ($this->insurancePrice / $this->creditTime) : $payment;
+		$payment = ($this->deferred == 1) ? $payment + $this->setDeferredPercentagesPrice() : $payment;
 		return $this->setRoundedValue($payment);		
 	}
+
+	/**
+	 * Расчитывает процент ежемесячного платежа в рамках отложенного платежа, руб.
+	 * @access private
+	 * @return decimal(65.2) размер процентов ежемесячного платежа в рамках отложенного, руб.
+	 */
+	private function setDeferredPercentagesPrice() {
+		$monthlyDeferredPercentages = $this->deferredPrice * $this->interestRate / (self::PERCENTAGES_100 * self::MONTHS_IN_YEAR);		
+		return $this->setRoundedValue($monthlyDeferredPercentages);
+	}
+
 
 	/**
 	 * Расчет стоимости КАСКО, руб
@@ -265,8 +306,22 @@ class CreditCalculator implements CreditCalculatorInterface
 		return $this->insurancePercentages;
 	}
 
-	public function getDeferredPayentPrice() {
-		
+	/**
+	 * Возвращает размер отложенного платежа, руб.
+	 * @access  public
+	 * @return decimal(65.2) размер отложенного платежа, руб
+	 */
+	public function getDeferredPaymentPrice() {
+		return $this->setRoundedValue($this->deferredPrice);
+	}
+
+	/**
+	 * Возвращает размер процентной ставки отложенного платежа, %
+	 * @access  public
+	 * @return integer размер процентной ставки отложенного платежа, %
+	 */
+	public function getDeferredPercentages() {
+		return $this->deferredPercentages;
 	}
 
 	/**
@@ -311,6 +366,11 @@ class CreditCalculator implements CreditCalculatorInterface
 	private function setInsurancePrice() {
 		$insurancePercentages = $this->getAmountOfCredit() * $this->insurancePercentages / self::PERCENTAGES_100;
 		return $this->setRoundedValue($insurancePercentages);	
+	}
+
+	private function setDeferredPrice() {
+		$deferredPrice = $this->getCarPrice() * $this->deferredPercentages / self::PERCENTAGES_100;
+		return $this->setRoundedValue($deferredPrice);
 	}
 }
 
