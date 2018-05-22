@@ -1,22 +1,4 @@
-<?php
-namespace creditCalc;
-
-require_once 'autoload.php';
-
-/**
- * Чтение файла конфигурации
- * @var object
- */
-$config = include('config.inc.php');
-
-if($config->debug) {
-	error_reporting(0);
-	error_reporting(E_ERROR | E_WARNING | E_PARSE);
-	error_reporting(E_ALL);
-	ini_set("error_reporting", E_ALL);
-	error_reporting(E_ALL & ~E_NOTICE);
-}
-?>
+<?php require_once 'autoload.php'; ?>
 
 <html>
 	<head>
@@ -244,9 +226,7 @@ if($config->debug) {
 </html>
 
 
-<script type="text/javascript" src="main.js">
-	
-</script>
+<script type="text/javascript" src="main.js"></script>
 <script type="text/javascript">
 	var formName = document.getElementById('credit-user-data');
 	proceedAjaxCalculate(formName);

@@ -4,27 +4,9 @@ namespace creditCalc;
 
 require_once 'autoload.php';
 
-/**
- * Чтение файла конфигурации
- * @var object
- */
-$config = include('config.inc.php');
-
-
 function isValidJSON($str) {
    json_decode($str);
    return json_last_error() == JSON_ERROR_NONE;
-}
-
-function utf8ize($d) {
-    if (is_array($d)) {
-        foreach ($d as $k => $v) {
-            $d[$k] = utf8ize($v);
-        }
-    } else if (is_string ($d)) {
-        return utf8_encode($d);
-    }
-    return $d;
 }
 
 $inputUserDataJson = file_get_contents("php://input");
@@ -126,7 +108,8 @@ if (strlen($inputUserDataJson) > 0 && isValidJSON($inputUserDataJson)) {
 		);
 
 		header('Content-Type: application/json');
-		echo json_encode(utf8ize($creditData), JSON_UNESCAPED_UNICODE);
+		// echo json_encode(utf8ize($creditData), JSON_UNESCAPED_UNICODE);
+		echo json_encode($creditData, JSON_UNESCAPED_UNICODE);
 		return true;
 
   	} else {
