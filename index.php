@@ -31,7 +31,10 @@ if($config->debug) {
 	<hr>
 
 	<div class="credit-data" id="credit-data">
-		<form id="credit-user-data" action="/" method="get">
+		<form id="credit-user-data" action="/getCreditData.php" method="post">
+
+			<fieldset>
+				<legend>Исходные данные</legend>
 
 			<table>
 				<tr>
@@ -39,7 +42,7 @@ if($config->debug) {
 						<label for="carPrice">Стоимость а/м, &#8381;</label>
 					</td>
 					<td>
-						<input type="number" name="carPrice" id="carPrice" required value="<?php echo isset($_GET['carPrice']) && !empty($_GET['carPrice']) ? $_GET['carPrice'] : null?>" min="<?php echo intval($config->minCreditPrice); ?>"><br>
+						<input type="number" name="carPrice" id="carPrice" required min="<?php echo intval($config->minCreditPrice); ?>"><br>
 					</td>
 				</tr>
 				<tr>
@@ -49,10 +52,8 @@ if($config->debug) {
 					<td>						
 						<select name="firstPayment" id="firstPayment" required>
 							<?php foreach ($config->firstPaymentArray as $key => $firstPaymentValue): ?>
-								<?php $isPaymentSelected = ($firstPaymentValue == $_GET['firstPayment']) ? 'selected' : 0; ?>
-								<option value="<?php echo $firstPaymentValue; ?>" <?php echo $isPaymentSelected; ?>><?php echo $firstPaymentValue; ?>%</option>
+								<option value="<?php echo $firstPaymentValue; ?>" ><?php echo $firstPaymentValue; ?>%</option>
 							<?php endforeach; ?>
-
 						</select>
 					</td>
 				</tr>
@@ -63,8 +64,7 @@ if($config->debug) {
 					<td>						
 						<select name="creditTime" id="creditTime" required>
 							<?php foreach ($config->creditTimeArray as $key => $creditTimeValue) : ?>
-								<?php $isTimeSelected = ($creditTimeValue == $_GET['creditTime']) ? 'selected' : 0; ?>
-								<option value="<?php echo $creditTimeValue; ?>" <?php echo $isTimeSelected; ?> > <?php echo $creditTimeValue; ?> мес.</option>
+								<option value="<?php echo $creditTimeValue; ?>"> <?php echo $creditTimeValue; ?> мес.</option>
 							<?php endforeach; ?>
 						</select>
 					</td>
@@ -74,17 +74,11 @@ if($config->debug) {
 						<label for="deferred">Отложенный платеж</label>
 					</td>
 					<td>
-						<?php
-							$isDeferredChecked = (isset($_GET['deferred']) && $_GET['deferred'] == 1) ? true : false;
-							$isDeferredVisible = (isset($_GET['deferred']) && $_GET['deferred'] == 1) ? 'visibility: unset' : 'visibility: hidden';
-						?>
-						<input type="checkbox" name="deferred" class="deferred" id="deferred" value="1" <?php echo ($isDeferredChecked) ? 'checked' : 0; ?> onclick="toggleByCheckbox('deferred', 'deferredPayment');">
+						<input type="checkbox" name="deferred" class="deferred" id="deferred" onclick="toggleByCheckbox('deferred', 'deferredPayment');">
 
-
-						<select name="deferredPayment" id="deferredPayment" style="<?php echo $isDeferredVisible; ?>" required>
+						<select name="deferredPayment" id="deferredPayment" style="visibility: hidden" required>
 							<?php foreach ($config->deferredPaymentArray as $key => $deferredPaymentValue) : ?>
-								<?php $deferredSelected = ($deferredPaymentValue == $_GET['deferredPayment']) ? 'selected' : 0; ?>
-								<option value="<?php echo $deferredPaymentValue; ?>" <?php echo $deferredSelected; ?> > <?php echo $deferredPaymentValue; ?> %</option>
+								<option value="<?php echo $deferredPaymentValue; ?>"> <?php echo $deferredPaymentValue; ?> %</option>
 							<?php endforeach; ?>
 						</select>
 					</td>
@@ -95,8 +89,7 @@ if($config->debug) {
 						<label for="casco">КАСКО</label>
 					</td>
 					<td>						
-						<?php $isCascoChecked = (isset($_GET['casco']) && $_GET['casco'] == 1) ? true : false; 			?>
-						<input type="checkbox" name="casco" class="casco" id="casco" value="1" <?php echo ($isCascoChecked) ? 'checked' : 0; ?>>
+						<input type="checkbox" name="casco" class="casco" id="casco">
 					</td>
 				</tr>
 				<tr>
@@ -104,185 +97,157 @@ if($config->debug) {
 						<label for="insurance">Страхование жизни</label>
 					</td>
 					<td>
-						<?php $isInsuranceChecked = (isset($_GET['insurance']) && $_GET['insurance'] == 1) ? true : false; 			?>
-						<input type="checkbox" name="insurance" class="insurance" id="insurance" value="1" <?php echo ($isInsuranceChecked) ? 'checked' : 0; ?>>
+						<input type="checkbox" name="insurance" class="insurance" id="insurance">
 					</td>
 				</tr>
 
 			</table>
 
 			<input type="submit" value="Рассчитать" class="submit" id="submit">
-			<a href="/">Сбросить</a>
+			<a href="javascript:void(0)" onclick="resetForm()">Сбросить</a>
 
+			</fieldset>
 		</form>
 	</div>
 
-	<?php
+	<div id="result" class="credit-values" style="display: none">
 
-	if (isset($_GET['carPrice']) && isset($_GET['firstPayment']) && isset($_GET['creditTime']) ):
+		<fieldset>
+			<legend>Результаты расчета</legend>
 
+			<table class="credit-table" id="printableArea">
+				<thead>
+					<th>
+						<td colspan="8">
+							<h2>Стоимость а/м <span id="carPriceValue"></span> &#8381;</h2>
+						</td>
+					</th>
+				</thead>
+				<tbody>
+					<tr>
+						<td>#</td>
+						<td colspan="2">Условия кредитования</td>
+						<td colspan="2">КАСКО</td>
+						<td colspan="2">Страхование жизни</td>
+						<td colspan="2">Отложенный платеж</td>
+					</tr>
+					<tr>
+						<td>1</td>
+						<td>
+							Сумма кредита
+						</td>
+						<td>
+							<span id="creditAmountValue"></span> &#8381;
+						</td>
+						<td>
+							Процентная ставка
+						</td>
+						<td>
+							<span id="cascoPercentagesValue"></span>  %
+						</td>
+						<td>
+							Процентная ставка
+						</td>
+						<td>
+							<span id="insurancePercentagesValue"></span> %
+						</td>
+						<td>
+							Процентная ставка
+						</td>
+						<td>
+							<span id="deferredPercentagesValue"></span> %						
+						</td>
+					</tr>
+					<tr>
+						<td>2</td>
+						<td>
+							Срок кредита
+						</td>
+						<td>
+							<span id="creditTimeValue"></span> мес
+						</td>
+						<td>
+							Стоимость КАСКО
+						</td>
+						<td>
+							<span id="cascoPriceValue"></span> &#8381;
+						</td>
+						<td>
+							Стоимость СЖ
+						</td>
+						<td>
+							<span id="insurancePriceValue"></span> &#8381;
+						</td>
+						<td>
+							Размер отложенного платежа
+						</td>
+						<td>
+							<span id="deferredPaymentValue"></span> &#8381;
+						</td>
+					</tr>
+					<tr>
+						<td>3</td>
+						<td>
+							Первоначальный взнос
+						</td>
+						<td>
+							<span id="initialPaymentValue"></span> &#8381; (<span id="initialPaymentPercentValue"></span>  %)
+						</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>4</td>
+						<td>
+							Процентная ставка
+						</td>
+						<td>
+							<span id="interestRateValue"></span> %
+						</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>5</td>
+						<td>
+							Ежемесячный платеж
+						</td>
+						<td>
+							<span id="montlyPaymentValue"></span>  &#8381;
+						</td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+				
+			</table>
 
-	$carPrice = intval($_GET['carPrice']); //2819900
-	$firstPaymentPercentage = intval($_GET['firstPayment']); //30
-	$creditTime = intval($_GET['creditTime']); //36
-	$casco = isset($_GET['casco']) && !empty($_GET['casco']) ? $_GET['casco'] : 0; //1
-	$insurance = isset($_GET['insurance']) && !empty($_GET['insurance']) ? $_GET['insurance'] : 0; //1
-	$deferred = isset($_GET['deferred']) && !empty($_GET['deferred']) ? intval($_GET['deferred']) : 0; //1
-	$deferredPercentages = intval($_GET['deferredPayment']); //30
-
-
-
-	$creditCalculator = new CreditCalculator(
-			$carPrice,
-			$firstPaymentPercentage,
-			$creditTime,
-			$config->interestRate,
-			$casco,
-			$config->cascoPercentages,
-			$insurance,
-			$config->insurancePercentages,
-			$deferred,
-			$deferredPercentages
-		);
-
-	$creditCalculator->roundCoefficient = 0;
-
-	?>
-
-	<div class="credit-values">
-
-
-		<table class="credit-table" id="printableArea">
-			<thead>
-				<th>
-					<td colspan="8">
-						<h2>Стоимость а/м <?php echo $creditCalculator->getCarPrice(); ?>  &#8381;</h2>
-					</td>
-				</th>
-			</thead>
-			<tbody>
-				<tr>
-					<td>#</td>
-					<td colspan="2">Условия кредитования</td>
-					<td colspan="2">КАСКО</td>
-					<td colspan="2">Страхование жизни</td>
-					<td colspan="2">Отложенный платеж</td>
-				</tr>
-				<tr>
-					<td>1</td>
-					<td>
-						Сумма кредита
-					</td>
-					<td>
-						<?php echo $creditCalculator->getAmountOfCredit(); ?>  &#8381;
-					</td>
-					<td>
-						Процентная ставка
-					</td>
-					<td>
-						<?php echo $creditCalculator->getCascoPercentages(); ?>  %
-					</td>
-					<td>
-						Процентная ставка
-					</td>
-					<td>
-						<?php echo $creditCalculator->getInsurancePercentages(); ?> %
-					</td>
-					<td>
-						Процентная ставка
-					</td>
-					<td>
-						<?php echo $creditCalculator->getDeferredPercentages(); ?> %						
-					</td>
-				</tr>
-				<tr>
-					<td>2</td>
-					<td>
-						Срок кредита
-					</td>
-					<td>
-						<?php echo $creditCalculator->getCreditTime(); ?> мес
-					</td>
-					<td>
-						Стоимость КАСКО
-					</td>
-					<td>
-						<?php echo $creditCalculator->getCascoPrice(); ?>  &#8381;
-					</td>
-					<td>
-						Стоимость СЖ
-					</td>
-					<td>
-						<?php echo $creditCalculator->getInsurancePrice(); ?> &#8381;
-					</td>
-					<td>
-						Размер отложенного платежа
-					</td>
-					<td>
-						<?php echo $creditCalculator->getDeferredPaymentPrice(); ?> &#8381;
-					</td>
-				</tr>
-				<tr>
-					<td>3</td>
-					<td>
-						Первоначальный взнос
-					</td>
-					<td>
-						<?php echo $creditCalculator->getInitialPayment() . '  &#8381; (' . $creditCalculator->getInitialPaymentPercentages() . '%)'; ?>
-					</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>4</td>
-					<td>
-						Процентная ставка
-					</td>
-					<td>
-						<?php echo $creditCalculator->getInterestRate(); ?> %
-					</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-				<tr>
-					<td>5</td>
-					<td>
-						Ежемесячный платеж
-					</td>
-					<td>
-						<?php echo $creditCalculator->getMonthlyPayment(); ?>  &#8381;
-					</td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
-			</tbody>
-			
-		</table>
+			<input type="button" value="Печать" id="print" style="margin-left: 15px;">
 		
-
-
-		<input type="button" value="Печать" id="print" style="margin-left: 15px;">
-
+		</fieldset>
 
 	</div>
-
-	<?php endif; ?>
-
-	<!-- <hr> -->
 		
 	</body>
 </html>
 
-<script type="text/javascript" src="main.js"></script>
+
+<script type="text/javascript" src="main.js">
+	
+</script>
+<script type="text/javascript">
+	var formName = document.getElementById('credit-user-data');
+	proceedAjaxCalculate(formName);
+</script>

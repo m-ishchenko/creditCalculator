@@ -64,3 +64,8 @@ select {
 
       display: inline !important;
 }
+
+fieldset {
+	border-width: 1px;
+	border-color: #ededed;
+}
