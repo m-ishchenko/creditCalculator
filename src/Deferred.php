@@ -1,5 +1,5 @@
 <?php
-namespace creditCalc;
+namespace CreditCalculator\src;
 
 /**
  * Вспомогательный класс, предназначенный для передачи предварительно рассчитанных значений расчета отложенного платежа кредитному калькулятору
@@ -40,6 +40,16 @@ final class Deferred
 	 */
 	function __construct($needDeferred, $deferredPercentages = null)
 	{
+		try {
+			if(Base::checkIsNull($needDeferred)){
+				Base::validateNumbers($needDeferred, Base::BOOLEAN_VALIDATOR);
+			}
+			if(Base::checkIsNull($deferredPercentages)){
+				Base::validateNumbers($deferredPercentages, Base::FLOAT_VALIDATOR);
+			}
+		} catch (Exception $e) {
+			print('Ошибка валидации: ' .$e->getMessage());
+		}
 		$this->needDeferred = $needDeferred;
 
 		$this->deferredPercentages = $deferredPercentages;
@@ -82,7 +92,7 @@ final class Deferred
 	 * @return  float
 	 */
 	public function setDeferredPercentagesPrice($carPrice, $interestRate) {
-		return $this->setDeferredPrice($carPrice) * $interestRate / (SharedValues::PERCENTAGES_100 * SharedValues::MONTHS_IN_YEAR);
+		return $this->setDeferredPrice($carPrice) * $interestRate / (Base::PERCENTAGES_100 * Base::MONTHS_IN_YEAR);
 	}
 
 	/**
@@ -101,6 +111,6 @@ final class Deferred
 	 * @return  float стоимость отложенного платежа, руб
 	 */
 	public function setDeferredPrice($carPrice) {
-		return $carPrice * $this->deferredPercentages / SharedValues::PERCENTAGES_100;
+		return $carPrice * $this->deferredPercentages / Base::PERCENTAGES_100;
 	}
 }

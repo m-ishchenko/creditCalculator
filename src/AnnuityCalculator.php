@@ -1,7 +1,10 @@
 <?php
-namespace creditCalc;
+namespace CreditCalculator\src;
 
-require_once 'autoload.php';
+require __DIR__.'/BaseCreditCalculator.php';
+
+use CreditCalculator\src\BaseCreditCalculator;
+use CreditCalculator\src\Base;
 
 /**
  * Расчет аннуитета автокредита
@@ -13,119 +16,8 @@ require_once 'autoload.php';
  * @version 1.0
  * @final
  */
-final class CreditCalculator implements CreditCalculatorInterface
+final class AnnuityCalculator extends BaseCreditCalculator
 {
-	/**
-	 * Процент от цены для расчета суммы КАСКО
-	 * 
-	 * @access  private
-	 * @var integer процент стоимости а/м
-	 */
-	private $cascoPercentages;
-
-	/**
-	 * Учитывать КАСКО
-	 * 
-	 * @access private
-	 * @var integer необходимость учитывать КАСКО
-	 */
-	private $needCasco;
-
-	/**
-	 * Стоимость КАСКО
-	 * 
-	 * @access private
-	 * @var float стоимость КАСКО, руб.
-	 */
-	private $cascoPrice;
-
-	/**
-	 * Учитывать страхование жизни
-	 * 
-	 * @access  private
-	 * @var boolean
-	 */
-	private $needInsurance;
-
-	/**
-	 * Процент от стоимости а/м для расчета суммы страхования жизни
-	 * 
-	 * @access  private
-	 * @var integer процент стоимости а/м, %
-	 */
-	private $insurancePercentages;
-
-	/**
-	 * Сумма страхования жизни, руб
-	 * 
-	 * @access  private
-	 * @var float страхование жизни, руб
-	 */
-	private $insurancePrice;
-
-	/**
-	 * Учитывать отложенный платеж
-	 * 
-	 * @access  private
-	 * @var boolean необходимость учитывать отложенный платеж
-	 */
-	private $needDeferred;
-
-	/**
-	 * Процент от первоначальной стоимости а/м для расчета суммы отложенного платежа, %
-	 * 
-	 * @access  private
-	 * @var integer процент стоимости а/м, %
-	 */
-	private $deferredPercentages;
-
-	/**
-	 * Сумма отложенного платежа, руб
-	 * 
-	 * @access private
-	 * @var float сумма отложенного платежа, руб
-	 */
-	private $deferredPrice;
-
-	/**
-	 * Сумма процентов отложенного платежа
-	 * 
-	 * @access private
-	 * @var float сумма, подлежащая уплате по процентам отложенного платежа, руб
-	 */
-	private $deferredPercentagesPrice;
-
-	/**
-	 * Итоговая стоимость а/м
-	 * 
-	 * @access private
-	 * @var float стоимость а/м, руб
-	 */
-	private $carPrice;
-
-	/**
-	 * Размер первоначального взноса, %
-	 * 
-	 * @access private
-	 * @var integer первоначальный взнос, %
-	 */
-	private $firstPaymentPercentage;
-
-	/**
-	 * Срок кредита, мес
-	 * 
-	 * @access private
-	 * @var integer срок кредита, мес
-	 */
-	private $creditTime;
-
-	/**
-	 * Размер процентной ставки по кредиту
-	 * 
-	 * @access private
-	 * @var integer процентная ставка, %
-	 */
-	private $interestRate;
 	
 	/**
 	 * Установка входных параметров при инициализаци
@@ -167,7 +59,7 @@ final class CreditCalculator implements CreditCalculatorInterface
 	 * @return float заявленная стоимость а/м, руб
 	 */
 	public function getCarPrice() {
-		return SharedValues::setRoundedValue($this->carPrice);
+		return Base::setRoundedValue($this->carPrice);
 	}
 
 	/**
@@ -188,11 +80,11 @@ final class CreditCalculator implements CreditCalculatorInterface
 	public function getInitialPayment() {
 		if($this->needCasco) {
 			$carPrice = $this->getCarPrice() + $this->getCascoPrice();
-			$initialPayment = ($carPrice * $this->firstPaymentPercentage) / SharedValues::PERCENTAGES_100;
+			$initialPayment = ($carPrice * $this->firstPaymentPercentage) / Base::PERCENTAGES_100;
 		} else {
-			$initialPayment = ($this->getCarPrice() * $this->firstPaymentPercentage) / SharedValues::PERCENTAGES_100;
+			$initialPayment = ($this->getCarPrice() * $this->firstPaymentPercentage) / Base::PERCENTAGES_100;
 		}
-		return SharedValues::setRoundedValue($initialPayment);
+		return Base::setRoundedValue($initialPayment);
 	}
 
 	/**
@@ -222,7 +114,7 @@ final class CreditCalculator implements CreditCalculatorInterface
 	public function getAmountOfCredit() {
 		$amount = $this->carPrice - $this->getInitialPayment();
 		$amount = ($this->needCasco) ? $amount + $this->cascoPrice : $amount;
-		return SharedValues::setRoundedValue($amount);
+		return Base::setRoundedValue($amount);
 	}
 
 	/**
@@ -257,7 +149,7 @@ final class CreditCalculator implements CreditCalculatorInterface
 		$payment = $this->getAnnuityCoefficient() * $creditAmount;
 		$payment = ($this->needInsurance) ? $payment + ($this->insurancePrice / $this->creditTime) : $payment;		
 		$payment = ($this->needDeferred) ? $payment + $this->deferredPercentagesPrice : $payment;
-		return SharedValues::setRoundedValue($payment);		
+		return Base::setRoundedValue($payment);		
 	}
 
 	/**
@@ -267,7 +159,7 @@ final class CreditCalculator implements CreditCalculatorInterface
 	 * @return float стоимость КАСКО, руб
 	 */
 	public function getCascoPrice() {
-		return SharedValues::setRoundedValue($this->cascoPrice);		
+		return Base::setRoundedValue($this->cascoPrice);		
 	}
 
 	/**
@@ -277,7 +169,7 @@ final class CreditCalculator implements CreditCalculatorInterface
 	 * @return float стоимость страхования жизни, руб
 	 */
 	public function getInsurancePrice() {
-		return SharedValues::setRoundedValue($this->insurancePrice);
+		return Base::setRoundedValue($this->insurancePrice);
 	}
 
 	/**
@@ -307,7 +199,7 @@ final class CreditCalculator implements CreditCalculatorInterface
 	 * @return float размер отложенного платежа, руб
 	 */
 	public function getDeferredPaymentPrice() {
-		return SharedValues::setRoundedValue($this->deferredPrice);
+		return Base::setRoundedValue($this->deferredPrice);
 	}
 
 	/**
@@ -318,37 +210,6 @@ final class CreditCalculator implements CreditCalculatorInterface
 	 */
 	public function getDeferredPercentages() {
 		return $this->deferredPercentages;
-	}
-
-	/**
-	 * Расчет числового коэффициента значения процентной ставки
-	 * 
-	 * @access private
-	 * @return float числовое значение процентной ставки
-	 */
-	private function getInterestRateNumeric() {
-		return $this->getInterestRate() / SharedValues::PERCENTAGES_100;
-	}
-
-	/**
-	 * Расчет месячной процентной ставки по кредиту
-	 * 
-	 * @access private
-	 * @return float месячная процентная ставка по кредиту
-	 */
-	private function getMonthlyPercentages() {
-		return $this->getInterestRateNumeric() / SharedValues::MONTHS_IN_YEAR;
-	}
-
-	/**
-	 * Расчет коэффициента аннуитета
-	 * 
-	 * @access private
-	 * @return float коэффициент аннуитета
-	 */
-	private function getAnnuityCoefficient() {
-		$i = pow(1 + $this->getMonthlyPercentages(), $this->creditTime);
-		return ($this->getMonthlyPercentages() * $i) / ($i - 1);
 	}
 }
 

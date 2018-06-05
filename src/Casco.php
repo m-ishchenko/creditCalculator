@@ -1,5 +1,5 @@
 <?php
-namespace creditCalc;
+namespace CreditCalculator\src;
 
 /**
  * Вспомогательный класс, предназначенный для передачи предварительно рассчитанных значений расчета КАСКО кредитному калькулятор у КАСКО расчитывается по принципу получения процентной ставки на стоимость а/м.
@@ -36,6 +36,17 @@ final class Casco
 	 */
 	function __construct($needCasco = 0, $cascoPercentages = null)
 	{
+		try {
+			if(Base::checkIsNull($needCasco)) {
+				Base::validateNumbers($needCasco, Base::BOOLEAN_VALIDATOR);
+			}	
+			if(Base::checkIsNull($cascoPercentages)) {
+				Base::validateNumbers($cascoPercentages, Base::FLOAT_VALIDATOR);
+			}	
+		} catch (Exception $e) {
+			print('Ошибка валидации: ' .$e->getMessage());
+		}
+
 		$this->needCasco = $needCasco;
 		$this->cascoPercentages = $cascoPercentages;
 	}
@@ -75,6 +86,6 @@ final class Casco
 	 * @return  float сумма затрат на оплату КАСКО
 	 */
 	public function setCascoPrice($carPrice) {
-		return $carPrice * $this->cascoPercentages / SharedValues::PERCENTAGES_100;
+		return $carPrice * $this->cascoPercentages / Base::PERCENTAGES_100;
 	}
 }

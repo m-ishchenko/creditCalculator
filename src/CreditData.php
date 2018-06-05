@@ -1,5 +1,5 @@
 <?php
-namespace creditCalc;
+namespace CreditCalculator\src;
 
 /**
  * Вспомогательный класс, предназначенный для передачи значений условий кредита калькулятору
@@ -54,6 +54,15 @@ final class CreditData
 	 */
 	function __construct($carPrice, $firstPaymentPercentage, $creditTime, $interestRate)
 	{
+		try {
+			Base::validateNumbers($carPrice, Base::FLOAT_VALIDATOR);
+			Base::validateNumbers($firstPaymentPercentage, Base::FLOAT_VALIDATOR);
+			Base::validateNumbers($creditTime, Base::INT_VALIDATOR);
+			Base::validateNumbers($interestRate, Base::FLOAT_VALIDATOR);
+		} catch (Exception $e) {
+			print('Ошибка валидации: ' .$e->getMessage());
+		}
+
 		$this->carPrice = $carPrice;
 		$this->firstPaymentPercentage = $firstPaymentPercentage;
 		$this->creditTime = $creditTime;

@@ -1,6 +1,5 @@
 <?php
-
-namespace creditCalc;
+namespace CreditCalculator\src;
 
 /**
  * Страхование жизни - указанный процент от стоимости а/м
@@ -35,6 +34,16 @@ final class Insurance
 	 */
 	function __construct($needInsurance = 0, $insurancePercentages = null)
 	{
+		try {			
+			if(Base::checkIsNull($needInsurance)){
+				Base::validateNumbers($needInsurance, Base::BOOLEAN_VALIDATOR);
+			}
+			if(Base::checkIsNull($insurancePercentages)){
+				Base::validateNumbers($insurancePercentages, Base::FLOAT_VALIDATOR);
+			}
+		} catch (Exception $e) {
+			print('Ошибка валидации: ' .$e->getMessage());
+		}
 		$this->needInsurance = $needInsurance;
 		$this->insurancePercentages = $insurancePercentages;
 	}
@@ -74,6 +83,6 @@ final class Insurance
 	 * @return float сумма страхования жизни, руб
 	 */
 	public function setInsurancePrice($creditAmount) {
-		return $creditAmount * $this->insurancePercentages / SharedValues::PERCENTAGES_100;
+		return $creditAmount * $this->insurancePercentages / Base::PERCENTAGES_100;
 	}
 }
