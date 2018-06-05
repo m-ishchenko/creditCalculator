@@ -6,7 +6,7 @@ use CreditCalculator\src\Base;
 use CreditCalculator\src\Casco;
 use CreditCalculator\src\Insurance;
 use CreditCalculator\src\Deferred;
-use CreditCalculator\src\CreditCalculator;
+use CreditCalculator\src\AnnuityCalculator;
 ?>
 
 <html>
@@ -120,7 +120,7 @@ use CreditCalculator\src\CreditCalculator;
 		$insurance = new Insurance($needInsurance, $config->insurancePercentages);
 		$deferred = new Deferred($needDeferred, $_GET['deferredPayment']);
 
-		$creditCalculator = new CreditCalculator($credit, $casco, $insurance, $deferred);
+		$creditCalculator = new AnnuityCalculator($credit, $casco, $insurance, $deferred);
 
 	?>
 	<div id="result" class="credit-values">
