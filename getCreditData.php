@@ -1,42 +1,34 @@
 <?php
-
 namespace creditCalc;
 
 require_once 'autoload.php';
 
-function isValidJSON($str) {
-   json_decode($str);
-   return json_last_error() == JSON_ERROR_NONE;
-}
-
 $inputUserDataJson = file_get_contents("php://input");
 
-if (strlen($inputUserDataJson) > 0 && isValidJSON($inputUserDataJson)) {
+if (strlen($inputUserDataJson) > 0 && SharedValues::isValidJSON($inputUserDataJson)) {
   	$inputUserDataJson = json_decode($inputUserDataJson);
 
   	if(array_key_exists('carPrice', $inputUserDataJson) && array_key_exists('firstPayment', $inputUserDataJson) && array_key_exists('creditTime', $inputUserDataJson)) {
 
+
 		$carPrice = intval($inputUserDataJson->carPrice); //2819900
 		$firstPaymentPercentage = intval($inputUserDataJson->firstPayment); //30
 		$creditTime = intval($inputUserDataJson->creditTime); //36
-		$casco = isset($inputUserDataJson->casco) && !empty($inputUserDataJson->casco) ? $inputUserDataJson->casco : 0; //1
-		$insurance = isset($inputUserDataJson->insurance) && !empty($inputUserDataJson->insurance) ? $inputUserDataJson->insurance : 0; //1
+
 		$deferred = isset($inputUserDataJson->deferred) && !empty($inputUserDataJson->deferred) ? intval($inputUserDataJson->deferred) : 0; //1
 		$deferredPercentages = intval($inputUserDataJson->deferredPayment); //30
 
-		$creditCalculator = new CreditCalculator(
-				$carPrice,
-				$firstPaymentPercentage,
-				$creditTime,
-				$config->interestRate,
-				$casco,
-				$config->cascoPercentages,
-				$insurance,
-				$config->insurancePercentages,
-				$deferred,
-				$deferredPercentages
-			);
-		$creditCalculator->roundCoefficient = 0;
+
+
+		$credit = new CreditData($carPrice, $firstPaymentPercentage, $creditTime, $config->interestRate);
+
+		$casco = new Casco($inputUserDataJson->casco, $config->cascoPercentages);
+
+		$insurance = new Insurance($inputUserDataJson->insurance, $config->insurancePercentages);
+
+		$deferred = new Deferred($deferred, $deferredPercentages);
+
+		$creditCalculator = new CreditCalculator($credit, $casco, $insurance, $deferred);
 
 
 		$creditData = array(
@@ -108,7 +100,6 @@ if (strlen($inputUserDataJson) > 0 && isValidJSON($inputUserDataJson)) {
 		);
 
 		header('Content-Type: application/json');
-		// echo json_encode(utf8ize($creditData), JSON_UNESCAPED_UNICODE);
 		echo json_encode($creditData, JSON_UNESCAPED_UNICODE);
 		return true;
 

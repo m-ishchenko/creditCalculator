@@ -9,6 +9,7 @@ trait CreditCalculatorValidatorsTrait
 {
 	/**
 	 * Количество символов округления
+	 * 
 	 * @access public
 	 * @var integer
 	 */
@@ -16,6 +17,7 @@ trait CreditCalculatorValidatorsTrait
 
 	/**
 	 * Проверка является ли аргумент числом
+	 * 
 	 * @access private
 	 * @param  integer $arg аргумент, подлежащий проверке
 	 * @return bool true|false      возвращает true, если переданный аргумент не пустой и является числом
@@ -37,6 +39,7 @@ trait CreditCalculatorValidatorsTrait
 
 	/**
 	 * Проверка является ли аргумент целым числом
+	 * 
 	 * @access private
 	 * @param  integer $arg аргумент, подлежащий проверке
 	 * @return bool true|false      возвращает true, если переданный аргумент не пустой и является целым числом
@@ -57,6 +60,7 @@ trait CreditCalculatorValidatorsTrait
 
 	/**
 	 * Возвращает округленное значение переданного аргумента
+	 * 
 	 * @access private
 	 * @param float $value числовое значение аргумента
 	 * @return float значение аргумента, округленное с точностью до значения аттрибута roundCoefficient

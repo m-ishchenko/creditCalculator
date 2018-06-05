@@ -1,7 +1,12 @@
 <?php
 
 /**
- * Задание параметров по-умолчанию
+ * Указание параметров по-умолчанию
+ * 
+ * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
+ * @package  Cars Credit Calculator
+ * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
+ * @license GPLv3 https://www.gnu.org/licenses/gpl-3.0.ru.html
  */
 return (object) array(
 

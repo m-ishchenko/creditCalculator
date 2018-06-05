@@ -1,8 +1,15 @@
 <?php
 
 /**
- * Чтение файла конфигурации
- * @var object
+ * Автозагрузка классов
+ * 
+ * установка уровня отображения ошибок
+ * считывает файл конфигурации
+ * 
+ * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
+ * @package  Cars Credit Calculator
+ * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
+ * @license GPLv3 https://www.gnu.org/licenses/gpl-3.0.ru.html
  */
 $config = include('config.inc.php');
 
@@ -14,6 +21,12 @@ if($config->debug) {
 	error_reporting(E_ALL & ~E_NOTICE);
 }
 
+/**
+ * Автозагрузка классов
+ * 
+ * @param  string $class имя класса
+ * @return string        имя файла класса
+ */
 function __autoload($class)
 {
     $parts = explode('\\', $class);
