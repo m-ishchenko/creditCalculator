@@ -1,10 +1,10 @@
 <?php
-namespace CreditCalculator\src;
+namespace CreditCalculator;
 
 require __DIR__.'/BaseCreditCalculator.php';
 
-use CreditCalculator\src\BaseCreditCalculator;
-use CreditCalculator\src\Base;
+use CreditCalculator\BaseCreditCalculator;
+use CreditCalculator\Base;
 
 /**
  * Расчет аннуитета автокредита

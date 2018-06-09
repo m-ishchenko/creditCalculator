@@ -1,5 +1,5 @@
 <?php
-namespace CreditCalculator\src;
+namespace CreditCalculator;
 
 /**
  * Вспомогательный класс, предназначенный для передачи значений условий кредита калькулятору

@@ -1,10 +1,15 @@
 <?php
-namespace CreditCalculator\src;
+namespace CreditCalculator;
 
-use CreditCalculator\src\Base;
+use CreditCalculator\Base;
 
 /**
  * 
+ * 
+ * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
+ * @package  Cars Credit Calculator
+ * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
+ * @license GPLv3 https://www.gnu.org/licenses/gpl-3.0.ru.html
  */
 abstract class BaseCreditCalculator
 {

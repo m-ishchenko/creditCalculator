@@ -1,5 +1,5 @@
 <?php
-namespace CreditCalculator\src;
+namespace CreditCalculator;
 
 /**
  * Страхование жизни - указанный процент от стоимости а/м
