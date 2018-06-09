@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * Для генерации документации запустить
+ * phpdoc -d path_to_project -t path_to_project\docs --template zend
+ */
+
 if(file_exists($_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php')) {
     require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 } else {
