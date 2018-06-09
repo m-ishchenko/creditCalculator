@@ -14,9 +14,15 @@
         "issues": "https://github.com/m-ishchenko/credit_calculator/issues?state=open",
         "source": "https://github.com/m-ishchenko/credit_calculator"
     },
-    "require": {
+    "autoload": {
+        "psr-4": {
+            "m-ishchenko\\credit_calculator\\": "src/"
+        }
     },
-    "require-dev": {
+    "autoload-dev": {
+        "psr-4": {
+            "m-ishchenko\\credit_calculator\\": "src/"
+        }
     },
     "autoload": {
 
