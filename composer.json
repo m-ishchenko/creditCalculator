@@ -16,12 +16,12 @@
     },
     "autoload": {
         "psr-4": {
-            "m-ishchenko\\credit_calculator\\": "src/"
+            "maximishchenko\\credit_calculator\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "m-ishchenko\\credit_calculator\\": "src/"
+            "maximishchenko\\credit_calculator\\": "src/"
         }
     },
     "autoload": {
