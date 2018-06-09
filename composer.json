@@ -1,5 +1,5 @@
 {
-    "name": "m-ishchenko/creditCalculator",
+    "name": "m-ishchenko/credit_calculator",
     "description": "Credit Annuity Cars Calculator",
     "type": "package",
     "keywords": ["cars", "credit", "credit_calculator"],
@@ -11,8 +11,8 @@
         }
     ],
     "support": {
-        "issues": "https://github.com/m-ishchenko/creditCalculator/issues?state=open",
-        "source": "https://github.com/m-ishchenko/creditCalculator"
+        "issues": "https://github.com/m-ishchenko/credit_calculator/issues?state=open",
+        "source": "https://github.com/m-ishchenko/credit_calculator"
     },
     "require": {
     },
