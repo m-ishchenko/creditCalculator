@@ -16,7 +16,7 @@
     },
     "autoload": {
         "psr-4": {
-            "maximishchenko\\credit_calculator": "src/"
+            "maximishchenko\\credit_calculator\\": "src/"
         }
     },
     "autoload-dev": {
