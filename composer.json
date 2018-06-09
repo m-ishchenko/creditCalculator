@@ -3,7 +3,7 @@
     "description": "Credit Annuity Cars Calculator",
     "type": "package",
     "keywords": ["cars", "credit", "credit_calculator"],
-    "license": "BSD-3-Clause",
+    "license": "GPLv3",
     "authors": [
         {
             "name": "Maxim Ishchenko",
