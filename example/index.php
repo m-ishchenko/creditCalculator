@@ -1,4 +1,14 @@
 <?php
+if(file_exists($_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php')) {
+    require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
+} else {
+    require __DIR__.'/../src/CreditData.php';
+    require __DIR__.'/../src/Base.php';
+    require __DIR__.'/../src/Casco.php';
+    require __DIR__.'/../src/Insurance.php';
+    require __DIR__.'/../src/Deferred.php';
+    require __DIR__.'/../src/AnnuityCalculator.php';
+}
 $config = include('config.inc.php');
 
 use maximishchenko\credit_calculator\CreditData;
