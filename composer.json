@@ -1,0 +1,28 @@
+{
+    "name": "m-ishchenko/creditCalculator",
+    "description": "Credit Annuity Cars Calculator",
+    "type": "package",
+    "keywords": ["cars", "credit", "credit_calculator"],
+    "license": "BSD-3-Clause",
+    "authors": [
+        {
+            "name": "Maxim Ishchenko",
+            "email": "maxim.ishchenko@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/m-ishchenko/creditCalculator/issues?state=open",
+        "source": "https://github.com/m-ishchenko/creditCalculator"
+    },
+    "require": {
+    },
+    "require-dev": {
+        // "phpunit/phpunit": "4.*"
+    },
+    "autoload": {
+
+    },
+    "autoload-dev": {
+
+    }
+}
