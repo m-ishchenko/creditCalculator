@@ -41,13 +41,14 @@ class Base
 	 * Значение валидатора boolean
 	 */
 	const BOOLEAN_VALIDATOR = 'boolean';
-	
-	/**
-	 * округляет переданное в качестве аргумента значение, до кол-ва, указанного в константе ROUND_COEFFICIENT
-	 * 
-	 * @access  public
-	 * @param float $value округленное значение
-	 */
+
+    /**
+     * округляет переданное в качестве аргумента значение, до кол-ва, указанного в константе ROUND_COEFFICIENT
+     *
+     * @access  public
+     * @param float $value округленное значение
+     * @return float
+     */
 	public static function setRoundedValue($value) {
 		return round($value, self::ROUND_COEFFICIENT);
 	}
@@ -79,37 +80,34 @@ class Base
 			);
 	}
 
-	/**
-	 * проверяет корректность переданного типа валидатора
-	 * 
-	 * @access  public
-	 * @static
-	 * @param  string $filterType тип фильтра валидатора
-	 * @return boolean             возвращает истину, если переданный тип валидатора присутствует среди ключей массива self::getAvailableValidationFiltersTypesArray()
-	 * @see self::getAvailableValidationFiltersTypesArray()
-	 * @throws Exception исключение, если валидатора нет среди ключей массива, полученного в результате выполнения метода self::getAvailableValidationFiltersTypesArray()
-	 */
+    /**
+     * проверяет корректность переданного типа валидатора
+     *
+     * @access  public
+     * @static
+     * @param  string $filterType тип фильтра валидатора
+     * @return bool возвращает истину, если переданный тип валидатора присутствует среди ключей массива self::getAvailableValidationFiltersTypesArray()
+     * @throws \Exception* @see self::getAvailableValidationFiltersTypesArray()
+     */
 	public static function validateFilterTypes($filterType) {
 		if(in_array($filterType, array_keys( self::getAvailableValidationFiltersTypesArray() ))) {
 			return true;		
 		} else {
 			throw new \Exception("Некорректный валидатор");	
 		}
-		return false;
 	}
 
-	/**
-	 * осуществляет валидацию, передаваемых числовых значений
-	 * 
-	 * @access  public
-	 * @static
-	 * @param  int|float|boolean $arg        числовой аргумент, подлежащий валидации
-	 * @param  string $filterType тип, используемого фильтра
-	 * @return boolean             возвращает истину, если переданный аргумент валиден, ложь - в обратном случае
-	 * @see self::validateFilterTypes()
-	 * @see self::getAvailableValidationFiltersTypesArray()
-	 * @throws Exception бросает исключение, если переданное значение не валидно
-	 */
+    /**
+     * осуществляет валидацию, передаваемых числовых значений
+     *
+     * @access  public
+     * @static
+     * @param  int|float|boolean $arg числовой аргумент, подлежащий валидации
+     * @param  string $filterType тип, используемого фильтра
+     * @return bool возвращает истину, если переданный аргумент валиден, ложь - в обратном случае
+     * @throws \Exception* @see self::validateFilterTypes()
+     * @see self::getAvailableValidationFiltersTypesArray()
+     */
 	public static function validateNumbers($arg, $filterType) {
 		if(self::validateFilterTypes($filterType)) {
 			$availableFilters = self::getAvailableValidationFiltersTypesArray();
@@ -118,7 +116,6 @@ class Base
 			} else {
 				throw new \Exception("Ошибка валидации значения ".$arg);
 			}
-			return false;
 		}
 		return false;
 	}

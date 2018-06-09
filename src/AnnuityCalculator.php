@@ -75,7 +75,7 @@ final class AnnuityCalculator extends BaseCreditCalculator
 	 * ```
 	 * 
 	 * @access  public
-	 * @return decimal сумма первоначального взноса
+	 * @return float сумма первоначального взноса
 	 */
 	public function getInitialPayment() {
 		if($this->needCasco) {
@@ -109,7 +109,7 @@ final class AnnuityCalculator extends BaseCreditCalculator
 	 * ```
 	 * 
 	 * @access  public
-	 * @return decimal сумма кредита, руб
+	 * @return float сумма кредита, руб
 	 */
 	public function getAmountOfCredit() {
 		$amount = $this->carPrice - $this->getInitialPayment();
@@ -131,7 +131,7 @@ final class AnnuityCalculator extends BaseCreditCalculator
 	 * Возвращает размер процентной ставки, %
 	 * 
 	 * @access public
-	 * @return decimal размер процентной ставки, %
+	 * @return float размер процентной ставки, %
 	 */
 	public function getInterestRate() {
 		return $this->interestRate;
