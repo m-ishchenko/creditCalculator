@@ -24,7 +24,6 @@
             "Tests\\": "tests/"
         }
     },
-    "minimum-stability": "stable",
     "require": {
     }
 }
