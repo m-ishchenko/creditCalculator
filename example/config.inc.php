@@ -1,11 +1,11 @@
 <?php
 
-require __DIR__.'/../CreditData.php';
-require __DIR__.'/../Base.php';
-require __DIR__.'/../Casco.php';
-require __DIR__.'/../Insurance.php';
-require __DIR__.'/../Deferred.php';
-require __DIR__.'/../AnnuityCalculator.php';
+# require __DIR__.'/../CreditData.php';
+# require __DIR__.'/../Base.php';
+# require __DIR__.'/../Casco.php';
+# require __DIR__.'/../Insurance.php';
+# require __DIR__.'/../Deferred.php';
+# require __DIR__.'/../AnnuityCalculator.php';
 
 /**
  * Указание параметров по-умолчанию

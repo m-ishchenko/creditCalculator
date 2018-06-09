@@ -1,5 +1,5 @@
 <?php
-namespace CreditCalculator;
+namespace maximishchenko\credit_calculator;
 
 /**
  * Содержит значения, справедливые для всех объектов

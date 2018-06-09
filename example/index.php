@@ -1,12 +1,12 @@
 <?php
 $config = include('config.inc.php');
 
-use CreditCalculator\CreditData;
-use CreditCalculator\Base;
-use CreditCalculator\Casco;
-use CreditCalculator\Insurance;
-use CreditCalculator\Deferred;
-use CreditCalculator\AnnuityCalculator;
+use maximishchenko\credit_calculator\CreditData;
+use maximishchenko\credit_calculator\Base;
+use maximishchenko\credit_calculator\Casco;
+use maximishchenko\credit_calculator\Insurance;
+use maximishchenko\credit_calculator\Deferred;
+use maximishchenko\credit_calculator\AnnuityCalculator;
 ?>
 
 <html>

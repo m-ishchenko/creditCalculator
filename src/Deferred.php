@@ -1,5 +1,5 @@
 <?php
-namespace CreditCalculator;
+namespace maximishchenko\credit_calculator;
 
 /**
  * Вспомогательный класс, предназначенный для передачи предварительно рассчитанных значений расчета отложенного платежа кредитному калькулятору

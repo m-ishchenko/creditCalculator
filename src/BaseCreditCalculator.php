@@ -1,7 +1,7 @@
 <?php
-namespace CreditCalculator;
+namespace maximishchenko\credit_calculator;
 
-use CreditCalculator\Base;
+use maximishchenko\credit_calculator\Base;
 
 /**
  * 
