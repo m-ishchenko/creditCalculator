@@ -75,7 +75,36 @@ $deferred = new Deferred(1, 20);
 $creditCalculator = new AnnuityCalculator($credit, $casco, $insurance, $deferred);
 ~~~
 
+После объявления класса ```maximishchenko\credit_calculator\AnnuityCalculator``` становятся доступны следующие методы
+
+* Данные кредита:
+
+    * ```$creditCalculator->getCarPrice()``` - возвращает стоимость а/м, руб
+    * ```$creditCalculator->getInitialPayment()``` - возвращает размер первоначального взноса, руб
+    * ```$creditCalculator->getAmountOfCredit()``` - возвращает размер суммы кредита, руб
+    * ```$creditCalculator->getInitialPaymentPercentages()``` - возвращает размер суммы кредита, %
+    * ```$creditCalculator->getCreditTime()``` - возвращает срок кредита, мес
+    * ```$creditCalculator->getInterestRate()``` - возвращает размер процентной ставки, %
+    * ```$creditCalculator->getMonthlyPayment()``` - возвращает размер ежемесячного платежа, руб
+    
+* КАСКО
+
+    * ```$creditCalculator->getCascoPrice()``` - возвращает размер стоимости КАСКО, руб
+    * ```$creditCalculator->getCascoPercentages()``` - возвращает размер процентной ставки КАСКО, %
+
+* Страхование жизни
+    
+    * ```$creditCalculator->getInsurancePrice()``` - возвращает размер стоимости страхования жизни, руб
+    * ```$creditCalculator->getInsurancePercentages()``` - возвращает размер процентной ставки страхования жизни, руб
+    
+* Отложенный платеж
+
+    * ```$creditCalculator->getDeferredPaymentPrice()``` - возвращает размер стоимости отложенного платежа, руб
+    * ```$creditCalculator->getDeferredPercentages()``` - возвращает размер процентной ставки отложенного платежа, %
+
 Пример использования находится в каталоге ```example```
 
 Значения по-умолчанию находятся в файле ```example/config.inc.php```
+
+
 

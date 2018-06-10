@@ -4,7 +4,7 @@ namespace maximishchenko\credit_calculator;
 use maximishchenko\credit_calculator\Base;
 
 /**
- * 
+ * Реализует базовые свойства и методы кредитного калькулятора
  * 
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @package  Cars Credit Calculator
@@ -217,7 +217,7 @@ abstract class BaseCreditCalculator
 	 * Расчет стоимости остаточного платежа, руб.
 	 * 
 	 * @access  public
-	 * @return decimal(65.2) стоимость остаточного платежа, руб.
+	 * @return float стоимость остаточного платежа, руб.
 	 */
 	abstract public function getDeferredPaymentPrice();
 
