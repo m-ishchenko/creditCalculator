@@ -1,6 +1,7 @@
 <?php
 namespace maximishchenko\credit_calculator;
 
+
 /**
  * Реализует базовые свойства и методы кредитного калькулятора
  * 
