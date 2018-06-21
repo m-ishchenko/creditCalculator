@@ -4,6 +4,9 @@
     "type": "package",
     "keywords": ["cars", "credit", "credit_calculator"],
     "license": "GPLv3",
+    "package": {
+        "version": "1.0.1"
+    },
     "authors": [
         {
             "name": "Maxim Ishchenko",
@@ -16,7 +19,7 @@
     },
     "autoload": {
         "psr-4": {
-            "maximishchenko\\credit_calculator\\": "src/"
+            "img\\credit_calculator\\": "src/"
         }
     },
     "autoload-dev": {
@@ -25,5 +28,6 @@
         }
     },
     "require": {
+        "php": "~7.1"
     }
 }

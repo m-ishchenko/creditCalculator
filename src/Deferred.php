@@ -1,5 +1,5 @@
 <?php
-namespace maximishchenko\credit_calculator;
+namespace img\credit_calculator;
 
 /**
  * Вспомогательный класс, предназначенный для передачи предварительно рассчитанных значений расчета отложенного платежа кредитному калькулятору
@@ -41,9 +41,9 @@ final class Deferred
 	function __construct($needDeferred, $deferredPercentages = null)
 	{
 		try {
-			if(Base::checkIsNull($needDeferred)){
-				Base::validateNumbers($needDeferred, Base::BOOLEAN_VALIDATOR);
-			}
+//			if(Base::checkIsNull($needDeferred)){
+//				Base::validateNumbers($needDeferred, Base::BOOLEAN_VALIDATOR);
+//			}
 			if(Base::checkIsNull($deferredPercentages)){
 				Base::validateNumbers($deferredPercentages, Base::FLOAT_VALIDATOR);
 			}

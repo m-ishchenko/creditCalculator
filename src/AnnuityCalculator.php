@@ -1,9 +1,9 @@
 <?php
-namespace maximishchenko\credit_calculator;
+namespace img\credit_calculator;
 
 require __DIR__.'/BaseCreditCalculator.php';
-use maximishchenko\credit_calculator\BaseCreditCalculator;
-use maximishchenko\credit_calculator\Base;
+use img\credit_calculator\BaseCreditCalculator;
+use img\credit_calculator\Base;
 
 /**
  * Расчет аннуитета автокредита
@@ -12,7 +12,7 @@ use maximishchenko\credit_calculator\Base;
  * @package  Cars Credit Calculator
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @license GPLv3 https://www.gnu.org/licenses/gpl-3.0.ru.html>
- * @version 1.0
+ * @version 1.0.1
  * @final
  */
 final class AnnuityCalculator extends BaseCreditCalculator

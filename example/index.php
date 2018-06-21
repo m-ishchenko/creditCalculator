@@ -17,12 +17,12 @@ if(file_exists($_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php')) {
 }
 $config = include('config.inc.php');
 
-use maximishchenko\credit_calculator\CreditData;
-use maximishchenko\credit_calculator\Base;
-use maximishchenko\credit_calculator\Casco;
-use maximishchenko\credit_calculator\Insurance;
-use maximishchenko\credit_calculator\Deferred;
-use maximishchenko\credit_calculator\AnnuityCalculator;
+use img\credit_calculator\CreditData;
+use img\credit_calculator\Base;
+use img\credit_calculator\Casco;
+use img\credit_calculator\Insurance;
+use img\credit_calculator\Deferred;
+use img\credit_calculator\AnnuityCalculator;
 ?>
 
 <html>

@@ -1,5 +1,5 @@
 <?php
-namespace maximishchenko\credit_calculator;
+namespace img\credit_calculator;
 
 
 /**

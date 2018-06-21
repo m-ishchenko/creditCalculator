@@ -19,7 +19,7 @@ return (object) array(
     /**
      * Кредитная ставка
      */
-    'interestRate' => 10.9, //14.8
+    'interestRate' => 14.8, //14.8
 
     /**
      * Процент для расчета каско
@@ -44,7 +44,7 @@ return (object) array(
     /**
      * % от стоимости а/м для расчета первоначального взноса
      */
-    'firstPaymentArray' => array(30, 60, 90),
+    'firstPaymentArray' => array(30, 40, 60, 90),
 
     /**
      * срок кредита, мес

@@ -1,5 +1,5 @@
 <?php
-namespace maximishchenko\credit_calculator;
+namespace img\credit_calculator;
 
 /**
  * Страхование жизни - указанный процент от стоимости а/м
@@ -35,9 +35,9 @@ final class Insurance
 	function __construct($needInsurance = 0, $insurancePercentages = null)
 	{
 		try {			
-			if(Base::checkIsNull($needInsurance)){
-				Base::validateNumbers($needInsurance, Base::BOOLEAN_VALIDATOR);
-			}
+//			if(Base::checkIsNull($needInsurance)){
+//				Base::validateNumbers($needInsurance, Base::BOOLEAN_VALIDATOR);
+//			}
 			if(Base::checkIsNull($insurancePercentages)){
 				Base::validateNumbers($insurancePercentages, Base::FLOAT_VALIDATOR);
 			}
