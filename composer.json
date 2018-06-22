@@ -5,7 +5,7 @@
     "keywords": ["cars", "credit", "credit_calculator"],
     "license": "BSD-3-Clause",
     "package": {
-        "version": "1.0.1"
+        "version": "1.1"
     },
     "authors": [
         {
