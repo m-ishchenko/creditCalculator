@@ -106,7 +106,6 @@ class Base
      * @param  int|float|boolean $arg числовой аргумент, подлежащий валидации
      * @param  string $filterType тип, используемого фильтра
      * @return bool возвращает истину, если переданный аргумент валиден, ложь - в обратном случае
-     * @throws \Exception* @see self::validateFilterTypes()
      * @see self::getAvailableValidationFiltersTypesArray()
      */
 	public static function validateNumbers($arg, $filterType) {
