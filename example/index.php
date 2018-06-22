@@ -9,6 +9,7 @@ if(file_exists($_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php')) {
     require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
 } else {
     require __DIR__.'/../src/CreditData.php';
+    require __DIR__.'/../src/BooleanValidator.php';
     require __DIR__.'/../src/Base.php';
     require __DIR__.'/../src/Casco.php';
     require __DIR__.'/../src/Insurance.php';
@@ -132,7 +133,8 @@ use img\credit_calculator\AnnuityCalculator;
 		$needDeferred = isset($_GET['deferred']) ? $_GET['deferred'] : null;
 
 		$credit = new CreditData($_GET['carPrice'], $_GET['firstPayment'], $_GET['creditTime'], $config->interestRate);
-		$casco = new Casco($needCasco, $config->cascoPercentages);
+//		$casco = new Casco($needCasco, $config->cascoPercentages);
+        $casco = new Casco(0, $config->cascoPercentages);
 		$insurance = new Insurance($needInsurance, $config->insurancePercentages);
 		$deferred = new Deferred($needDeferred, $_GET['deferredPayment']);
 

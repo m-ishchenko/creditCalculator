@@ -11,7 +11,8 @@ namespace img\credit_calculator;
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @package  Cars Credit Calculator
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @license GPLv3 https://www.gnu.org/licenses/gpl-3.0.ru.html
+ * @license BSD-3-Clause https://www.gnu.org/licenses/gpl-3.0.ru.html
+ * @version 1.1
  * @final
  */
 final class Deferred
@@ -41,13 +42,15 @@ final class Deferred
 	function __construct($needDeferred, $deferredPercentages = null)
 	{
 		try {
-//			if(Base::checkIsNull($needDeferred)){
+			if(Base::checkIsNull($needDeferred) && Base::checkIsNull($deferredPercentages)){
 //				Base::validateNumbers($needDeferred, Base::BOOLEAN_VALIDATOR);
-//			}
-			if(Base::checkIsNull($deferredPercentages)){
-				Base::validateNumbers($deferredPercentages, Base::FLOAT_VALIDATOR);
-			}
-		} catch (Exception $e) {
+                if(!Base::validateNumbers($deferredPercentages, Base::FLOAT_VALIDATOR)) {
+                    throw new \Exception('Размер отложенного платежа должен быть целым числом');
+                }
+			} else {
+			    throw new \Exception('Отложенный платеж. Переданы пустые значения');
+            }
+		} catch (\Exception $e) {
 			print('Ошибка валидации: ' .$e->getMessage());
 		}
 		$this->needDeferred = $needDeferred;

@@ -1,6 +1,7 @@
 <?php
 namespace img\credit_calculator;
 
+
 /**
  * Содержит значения, справедливые для всех объектов
  * 
@@ -111,11 +112,7 @@ class Base
 	public static function validateNumbers($arg, $filterType) {
 		if(self::validateFilterTypes($filterType)) {
 			$availableFilters = self::getAvailableValidationFiltersTypesArray();
-			if(filter_var(trim($arg), $availableFilters[$filterType], FILTER_NULL_ON_FAILURE)) {
-				return true;
-			} else {
-				throw new \Exception("Ошибка валидации значения ".$arg);
-			}
+			return (filter_var(trim($arg), $availableFilters[$filterType], FILTER_NULL_ON_FAILURE)) ? true : false;
 		}
 		return false;
 	}

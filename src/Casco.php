@@ -8,7 +8,8 @@ namespace img\credit_calculator;
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @package  Cars Credit Calculator
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @license GPLv3 https://www.gnu.org/licenses/gpl-3.0.ru.html
+ * @license BSD-3-Clause https://www.gnu.org/licenses/gpl-3.0.ru.html
+ * @version 1.1
  * @final
  */
 final class Casco
@@ -28,22 +29,25 @@ final class Casco
 	 */
 	private $cascoPercentages;
 
-	/**
-	 * Присваивает переданные классу при инициализации аргументы приватным свойствам
-	 * 
-	 * @param boolean $needCasco        необходимость учета КАСКО
-	 * @param float $cascoPercentages процентная ставка КАСКО
-	 */
+    /**
+     * Присваивает переданные классу при инициализации аргументы приватным свойствам
+     *
+     * @param bool|int $needCasco необходимость учета КАСКО
+     * @param float $cascoPercentages процентная ставка КАСКО
+     * @throws \Exception
+     */
 	function __construct($needCasco = 0, $cascoPercentages = null)
 	{
 		try {
-//			if(Base::checkIsNull($needCasco)) {
+			if(Base::checkIsNull($needCasco) && Base::checkIsNull($cascoPercentages)) {
 //				Base::validateNumbers($needCasco, Base::BOOLEAN_VALIDATOR);
-//			}
-			if(Base::checkIsNull($cascoPercentages)) {
-				Base::validateNumbers($cascoPercentages, Base::FLOAT_VALIDATOR);
-			}	
-		} catch (Exception $e) {
+                if(!Base::validateNumbers($cascoPercentages, Base::FLOAT_VALIDATOR)) {
+                    throw new \Exception('Процентная ставка КАСКО должна быть числом');
+                }
+			} else {
+			    throw new \Exception('КАСКО. Переданы пустые значения');
+            }
+		} catch (\Exception $e) {
 			print('Ошибка валидации: ' .$e->getMessage());
 		}
 

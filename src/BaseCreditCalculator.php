@@ -8,7 +8,8 @@ namespace img\credit_calculator;
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @package  Cars Credit Calculator
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @license GPLv3 https://www.gnu.org/licenses/gpl-3.0.ru.html
+ * @license BSD-3-Clause https://www.gnu.org/licenses/gpl-3.0.ru.html
+ * @version 1.1
  */
 abstract class BaseCreditCalculator
 {

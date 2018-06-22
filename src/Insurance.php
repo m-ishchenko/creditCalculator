@@ -7,7 +7,8 @@ namespace img\credit_calculator;
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @package  Cars Credit Calculator
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @license GPLv3 https://www.gnu.org/licenses/gpl-3.0.ru.html
+ * @license BSD-3-Clause https://www.gnu.org/licenses/gpl-3.0.ru.html
+ * @version 1.1
  * @final
  */
 final class Insurance
@@ -35,13 +36,15 @@ final class Insurance
 	function __construct($needInsurance = 0, $insurancePercentages = null)
 	{
 		try {			
-//			if(Base::checkIsNull($needInsurance)){
+			if(Base::checkIsNull($needInsurance) && Base::checkIsNull($insurancePercentages)){
 //				Base::validateNumbers($needInsurance, Base::BOOLEAN_VALIDATOR);
-//			}
-			if(Base::checkIsNull($insurancePercentages)){
-				Base::validateNumbers($insurancePercentages, Base::FLOAT_VALIDATOR);
-			}
-		} catch (Exception $e) {
+                if(!Base::validateNumbers($insurancePercentages, Base::FLOAT_VALIDATOR)) {
+                    throw new \Exception('Процентная ставка страхования жизни должна быть числом');
+                }
+			} else {
+			    throw new \Exception('Страхование жизни. Переданы пустые значения');
+            }
+		} catch (\Exception $e) {
 			print('Ошибка валидации: ' .$e->getMessage());
 		}
 		$this->needInsurance = $needInsurance;
