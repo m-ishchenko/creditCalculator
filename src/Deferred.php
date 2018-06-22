@@ -41,20 +41,15 @@ final class Deferred
 	 */
 	function __construct($needDeferred, $deferredPercentages = null)
 	{
-		try {
-			if(Base::checkIsNull($needDeferred) && Base::checkIsNull($deferredPercentages)){
-//				Base::validateNumbers($needDeferred, Base::BOOLEAN_VALIDATOR);
-                if(!Base::validateNumbers($deferredPercentages, Base::FLOAT_VALIDATOR)) {
-                    throw new \Exception('Размер отложенного платежа должен быть целым числом');
-                }
-			} else {
-			    throw new \Exception('Отложенный платеж. Переданы пустые значения');
+	    if(Base::checkIsNull($needDeferred) && Base::checkIsNull($deferredPercentages)) {
+            if(!Base::validateNumbers($deferredPercentages, Base::FLOAT_VALIDATOR)) {
+                throw new \InvalidArgumentException('Размер отложенного платежа должен быть целым числом');
             }
-		} catch (\Exception $e) {
-			print('Ошибка валидации: ' .$e->getMessage());
-		}
-		$this->needDeferred = $needDeferred;
+		} else {
+		    throw new \InvalidArgumentException('Отложенный платеж. Переданы пустые значения');
+        }
 
+		$this->needDeferred = Booleans::setBooleanValue($needDeferred);
 		$this->deferredPercentages = $deferredPercentages;
 	}
 

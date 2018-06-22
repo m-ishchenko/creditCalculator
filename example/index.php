@@ -14,6 +14,7 @@ if(file_exists($_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php')) {
     require __DIR__.'/../src/Insurance.php';
     require __DIR__.'/../src/Deferred.php';
     require __DIR__.'/../src/AnnuityCalculator.php';
+    require __DIR__.'/../src/Booleans.php';
 }
 $config = include('config.inc.php');
 
@@ -23,6 +24,7 @@ use img\credit_calculator\Casco;
 use img\credit_calculator\Insurance;
 use img\credit_calculator\Deferred;
 use img\credit_calculator\AnnuityCalculator;
+use img\credit_calculator\Booleans;
 ?>
 
 <html>
@@ -89,7 +91,7 @@ use img\credit_calculator\AnnuityCalculator;
 
 						<select name="deferredPayment" id="deferredPayment" style="visibility: <?php echo $isDeferredPayentVisible; ?>" required>
 							<?php foreach ($config->deferredPaymentArray as $key => $deferredPaymentValue) : ?>
-								<option value="<?php echo $deferredPaymentValue; ?>"> <?php echo $deferredPaymentValue; ?> %</option>
+								<option value="<?php echo $deferredPaymentValue; ?>" > <?php echo $deferredPaymentValue; ?> %</option>
 							<?php endforeach; ?>
 						</select>
 					</td>
@@ -132,8 +134,7 @@ use img\credit_calculator\AnnuityCalculator;
 		$needDeferred = isset($_GET['deferred']) ? $_GET['deferred'] : 0;
 
 		$credit = new CreditData($_GET['carPrice'], $_GET['firstPayment'], $_GET['creditTime'], $config->interestRate);
-//		$casco = new Casco($needCasco, $config->cascoPercentages);
-        $casco = new Casco(0, $config->cascoPercentages);
+		$casco = new Casco($needCasco, $config->cascoPercentages);
 		$insurance = new Insurance($needInsurance, $config->insurancePercentages);
 		$deferred = new Deferred($needDeferred, $_GET['deferredPayment']);
 

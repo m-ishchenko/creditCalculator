@@ -27,27 +27,23 @@ final class Insurance
 	 */
 	private $insurancePercentages;
 
-	/**
-	 * Присваивает переданные классу при инициализации аргументы приватным свойствам
-	 * 
-	 * @param boolean $needInsurance        необходимость расчета страхования жизни
-	 * @param float  $insurancePercentages процентная ставка для расчета страхования жизни
-	 */
+    /**
+     * Присваивает переданные классу при инициализации аргументы приватным свойствам
+     *
+     * @param bool|int $needInsurance необходимость расчета страхования жизни
+     * @param float $insurancePercentages процентная ставка для расчета страхования жизни
+     */
 	function __construct($needInsurance = 0, $insurancePercentages = null)
 	{
-		try {			
-			if(Base::checkIsNull($needInsurance) && Base::checkIsNull($insurancePercentages)){
-//				Base::validateNumbers($needInsurance, Base::BOOLEAN_VALIDATOR);
-                if(!Base::validateNumbers($insurancePercentages, Base::FLOAT_VALIDATOR)) {
-                    throw new \Exception('Процентная ставка страхования жизни должна быть числом');
-                }
-			} else {
-			    throw new \Exception('Страхование жизни. Переданы пустые значения');
+        if(Base::checkIsNull($needInsurance) && Base::checkIsNull($insurancePercentages)){
+            if(!Base::validateNumbers($insurancePercentages, Base::FLOAT_VALIDATOR)) {
+                throw new \InvalidArgumentException('Процентная ставка страхования жизни должна быть числом');
             }
-		} catch (\Exception $e) {
-			print('Ошибка валидации: ' .$e->getMessage());
-		}
-		$this->needInsurance = $needInsurance;
+		} else {
+		    throw new \InvalidArgumentException('Страхование жизни. Переданы пустые значения');
+        }
+
+		$this->needInsurance = Booleans::setBooleanValue($needInsurance);
 		$this->insurancePercentages = $insurancePercentages;
 	}
 
@@ -86,6 +82,6 @@ final class Insurance
 	 * @return float сумма страхования жизни, руб
 	 */
 	public function setInsurancePrice($creditAmount) {
-		return $creditAmount * $this->insurancePercentages / Base::PERCENTAGES_100;
+		return ($this->needInsurance) ? $creditAmount * $this->insurancePercentages / Base::PERCENTAGES_100 : 0;
 	}
 }

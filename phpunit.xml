@@ -1,0 +1,9 @@
+<phpunit colors="true">
+    <testsuites>
+        <testsuite name="credit_calculator">
+            <directory>tests</directory>
+            <!--<file>/tests/CascoTest.php</file>-->
+            <!--<file>/tests/InsuranceTest.php</file>-->
+        </testsuite>
+    </testsuites>
+</phpunit>
