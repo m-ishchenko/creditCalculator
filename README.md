@@ -23,7 +23,7 @@ composer require maximishchenko/credit_calculator "dev-master"
 
 Условия кредита:
 
-Объявить класс ```maximishchenko\credit_calculator\CreditData```.
+Объявить класс ```img\credit_calculator\services\CreditData```.
 
 Передать значения: 
 
@@ -34,7 +34,7 @@ composer require maximishchenko/credit_calculator "dev-master"
 
 Расчет КАСКО:
 
-Объявить класс ```maximishchenko\credit_calculator\Casco```.
+Объявить класс ```img\credit_calculator\services\Casco```.
 
 Передать значения: 
 
@@ -43,7 +43,7 @@ composer require maximishchenko/credit_calculator "dev-master"
 
 Расчет страхования жизни:
 
-Объявить класс ```maximishchenko\credit_calculator\Insurance```.
+Объявить класс ```img\credit_calculator\services\Insurance```.
 
 Передать значения: 
 
@@ -52,7 +52,7 @@ composer require maximishchenko/credit_calculator "dev-master"
 
 Расчет отложенного платежа:
 
-Объявить класс ```maximishchenko\credit_calculator\Deferred```.
+Объявить класс ```img\credit_calculator\services\Deferred```.
 
 Передать значения: 
 
@@ -60,12 +60,12 @@ composer require maximishchenko/credit_calculator "dev-master"
 * процентная ставка отложенного платежа (%, в примере - 20%)
 
 ~~~
-use maximishchenko\credit_calculator\CreditData;
-use maximishchenko\credit_calculator\Base;
-use maximishchenko\credit_calculator\Casco;
-use maximishchenko\credit_calculator\Insurance;
-use maximishchenko\credit_calculator\Deferred;
-use maximishchenko\credit_calculator\AnnuityCalculator;
+use img\credit_calculator\base\Base;
+use img\credit_calculator\services\CreditData;
+use img\credit_calculator\services\Casco;
+use img\credit_calculator\services\Insurance;
+use img\credit_calculator\services\Deferred;
+use img\credit_calculator\AnnuityCalculator;
 
 $credit = new CreditData(5100000, 30, 24, 10.9);
 $casco = new Casco(1, 0.71);
