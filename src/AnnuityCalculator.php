@@ -8,6 +8,7 @@ use img\credit_calculator\services\Casco;
 use img\credit_calculator\services\Insurance;
 use img\credit_calculator\services\Deferred;
 use img\credit_calculator\services\CreditData;
+use img\credit_calculator\services\AdditionalPreferencesInterface;
 
 /**
  * Расчет аннуитета автокредита
@@ -18,7 +19,6 @@ use img\credit_calculator\services\CreditData;
  * @license BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
  * @version 2.0
  * @final
- * @todo Пересмотреть функции присвоения сервисных значений (КАСКО, СЖ, ОП)
  */
 final class AnnuityCalculator extends BaseCreditCalculator implements CreditCalculatorInterface
 {
@@ -33,9 +33,9 @@ final class AnnuityCalculator extends BaseCreditCalculator implements CreditCalc
 	 */
 	function __construct(CreditData $credit, Casco $casco, Insurance $insurance, Deferred $deferred) {
 		$this->constructCreditData($credit);
-		$this->setCasco($casco);
-        $this->setInsurance($insurance);
-        $this->setDeferred($deferred);
+        $this->setServicePreference($casco);
+        $this->setServicePreference($insurance);
+        $this->setServicePreference($deferred);
 	}
 
     /**
@@ -48,36 +48,27 @@ final class AnnuityCalculator extends BaseCreditCalculator implements CreditCalc
         $this->interestRate = $credit->getInterestRate();
     }
 
-    /**
-     * @param Casco $casco
-     */
-    protected function setCasco(Casco $casco) {
-        $carPrice = $this->carPrice;
-        $this->needCasco = $casco->isNeedable();
-        $this->cascoPercentages = $casco->getPercentages();
-        $this->cascoPrice = ($this->needCasco) ? $casco->setPrice($carPrice) : 0;
-    }
-
-    /**
-     * @param Insurance $insurance
-     */
-    protected function setInsurance(Insurance $insurance) {
-        $creditAmount = $this->getAmountOfCredit();
-        $this->needInsurance = $insurance->isNeedable();
-        $this->insurancePercentages = $insurance->getPercentages();
-        $this->insurancePrice = $insurance->setPrice($creditAmount);
-    }
-
-    /**
-     * @param Deferred $deferred
-     */
-    protected function setDeferred(Deferred $deferred) {
-        $carPrice = $this->carPrice;
-        $interestRate = $this->interestRate;
-        $this->needDeferred = $deferred->isNeedable();
-        $this->deferredPercentages = $deferred->getPercentages();
-        $this->deferredPrice = $deferred->setPrice($this->carPrice);
-        $this->deferredPercentagesPrice = $deferred->setDeferredPercentagesPrice($carPrice, $interestRate);
+    protected function setServicePreference($preferences) {
+        if($preferences instanceof Casco) {
+            $carPrice = $this->carPrice;
+            $this->needCasco = $preferences->isNeedable();
+            $this->cascoPercentages = $preferences->getPercentages();
+            $this->cascoPrice = $preferences->setPrice($carPrice);
+        } elseif($preferences instanceof Insurance) {
+            $creditAmount = $this->getAmountOfCredit();
+            $this->needInsurance = $preferences->isNeedable();
+            $this->insurancePercentages = $preferences->getPercentages();
+            $this->insurancePrice = $preferences->setPrice($creditAmount);
+        } elseif($preferences instanceof Deferred) {
+            $carPrice = $this->carPrice;
+            $interestRate = $this->interestRate;
+            $this->needDeferred = $preferences->isNeedable();
+            $this->deferredPercentages = $preferences->getPercentages();
+            $this->deferredPrice = $preferences->setPrice($this->carPrice);
+            $this->deferredPercentagesPrice = $preferences->setDeferredPercentagesPrice($carPrice, $interestRate);
+        } else {
+            throw new \Exception('Некорректный аргумент');
+        }
     }
 
 	/**
