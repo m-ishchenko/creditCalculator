@@ -11,7 +11,7 @@ use img\credit_calculator\base\Booleans;
  * Стоимость КАСКО учитывается при расчете ежемесячного платежа <br>
  * 
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @package  Cars Credit Calculator
+ * @package  maximishchenko/credit_calculator
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @license BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
  * @version 2.0

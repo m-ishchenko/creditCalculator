@@ -8,7 +8,7 @@ use img\credit_calculator\base\Base;
  * Реализует базовые свойства и методы кредитного калькулятора
  * 
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @package  Cars Credit Calculator
+ * @package  maximishchenko/credit_calculator
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @license BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
  * @version 1.1

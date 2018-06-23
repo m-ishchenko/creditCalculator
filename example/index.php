@@ -2,7 +2,8 @@
 
 /**
  * Для генерации документации запустить
- * phpdoc -d path_to_project -t path_to_project\docs --template zend
+ * phpdoc -d path_to_project -t path_to_project\docs --ignore tests/,docs/,vendor/ --template zend
+ * Пример phpdoc -d d:\webroot\credit_calculator -t d:\webroot\credit_calculator\docs --ignore tests/,docs/,vendor/ --template zend
  */
 require '../vendor/autoload.php';
 
