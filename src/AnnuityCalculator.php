@@ -8,7 +8,6 @@ use img\credit_calculator\services\Casco;
 use img\credit_calculator\services\Insurance;
 use img\credit_calculator\services\Deferred;
 use img\credit_calculator\services\CreditData;
-use img\credit_calculator\services\AdditionalPreferencesInterface;
 
 /**
  * Расчет аннуитета автокредита
@@ -38,39 +37,6 @@ final class AnnuityCalculator extends BaseCreditCalculator implements CreditCalc
         $this->setServicePreference($deferred);
 	}
 
-    /**
-     * @param CreditData $credit
-     */
-	protected function constructCreditData(CreditData $credit) {
-        $this->carPrice = $credit->getCarPrice();
-        $this->firstPaymentPercentage = $credit->getFirstPaymentPercentages();
-        $this->creditTime = $credit->getCreditTime();
-        $this->interestRate = $credit->getInterestRate();
-    }
-
-    protected function setServicePreference($preferences) {
-        if($preferences instanceof Casco) {
-            $carPrice = $this->carPrice;
-            $this->needCasco = $preferences->isNeedable();
-            $this->cascoPercentages = $preferences->getPercentages();
-            $this->cascoPrice = $preferences->setPrice($carPrice);
-        } elseif($preferences instanceof Insurance) {
-            $creditAmount = $this->getAmountOfCredit();
-            $this->needInsurance = $preferences->isNeedable();
-            $this->insurancePercentages = $preferences->getPercentages();
-            $this->insurancePrice = $preferences->setPrice($creditAmount);
-        } elseif($preferences instanceof Deferred) {
-            $carPrice = $this->carPrice;
-            $interestRate = $this->interestRate;
-            $this->needDeferred = $preferences->isNeedable();
-            $this->deferredPercentages = $preferences->getPercentages();
-            $this->deferredPrice = $preferences->setPrice($this->carPrice);
-            $this->deferredPercentagesPrice = $preferences->setDeferredPercentagesPrice($carPrice, $interestRate);
-        } else {
-            throw new \Exception('Некорректный аргумент');
-        }
-    }
-
 	/**
 	 * Возвращает стоимость а/м, руб.
 	 * 
@@ -78,7 +44,8 @@ final class AnnuityCalculator extends BaseCreditCalculator implements CreditCalc
 	 * @return float заявленная стоимость а/м, руб
 	 */
 	public function getCarPrice() {
-		return Base::setRoundedValue($this->carPrice);
+	    $carPrice = ($this->needCasco) ? $this->carPrice + $this->getCascoPrice() : $this->carPrice;
+		return Base::setRoundedValue($carPrice);
 	}
 
 	/**
@@ -97,17 +64,9 @@ final class AnnuityCalculator extends BaseCreditCalculator implements CreditCalc
 	 * @return float сумма первоначального взноса
 	 */
 	public function getInitialPayment() {
-
 	    $carPrice = $this->getCarPrice();
-	    $cascoPrice = $this->getCascoPrice();
 	    $firstPaymentPercentages = $this->firstPaymentPercentage;
-
-		if($this->needCasco) {
-			$carPrice = $carPrice + $cascoPrice;
-			$initialPayment = ($carPrice * $firstPaymentPercentages) / Base::PERCENTAGES_100;
-		} else {
-			$initialPayment = ($carPrice * $firstPaymentPercentages) / Base::PERCENTAGES_100;
-		}
+        $initialPayment = ($carPrice * $firstPaymentPercentages) / Base::PERCENTAGES_100;
 		return Base::setRoundedValue($initialPayment);
 	}
 
@@ -136,11 +95,9 @@ final class AnnuityCalculator extends BaseCreditCalculator implements CreditCalc
 	 * @return float сумма кредита, руб
 	 */
 	public function getAmountOfCredit() {
-
 	    $carPrice = $this->carPrice;
 	    $cascoPrice = $this->cascoPrice;
 	    $initialPayment = $this->getInitialPayment();
-
 		$amount = $carPrice - $initialPayment;
 		$amount = ($this->needCasco) ? $amount + $cascoPrice : $amount;
         $amount = ($this->needDeferred) ? $amount - $this->deferredPrice : $amount;
@@ -174,13 +131,10 @@ final class AnnuityCalculator extends BaseCreditCalculator implements CreditCalc
 	 * @return float ежемесячный платеж, руб
 	 */
 	public function getMonthlyPayment() {
-
 	    $creditAmount = $this->getAmountOfCredit();
 		$annuityCoefficient = $this->getAnnuityCoefficient();
-
-		$payment = $annuityCoefficient * $creditAmount;
-		$payment = ($this->needInsurance) ? $payment + ($this->insurancePrice / $this->creditTime) : $payment;		
-		$payment = ($this->needDeferred) ? $payment + $this->deferredPercentagesPrice : $payment;
+        $basepayment = $annuityCoefficient * $creditAmount;
+        $payment = $basepayment + $this->getInsuranceMonthlyPayment() + $this->deferredPercentagesPrice;
 		return Base::setRoundedValue($payment);		
 	}
 
@@ -243,5 +197,49 @@ final class AnnuityCalculator extends BaseCreditCalculator implements CreditCalc
 	public function getDeferredPercentages() {
 		return $this->deferredPercentages;
 	}
+
+    /**
+     * @param CreditData $credit
+     */
+    protected function constructCreditData(CreditData $credit) {
+        $this->carPrice = $credit->getCarPrice();
+        $this->firstPaymentPercentage = $credit->getFirstPaymentPercentages();
+        $this->creditTime = $credit->getCreditTime();
+        $this->interestRate = $credit->getInterestRate();
+    }
+
+    /**
+     * @param $preferences
+     * @throws \Exception
+     */
+    protected function setServicePreference($preferences) {
+        if($preferences instanceof Casco) {
+            $carPrice = $this->carPrice;
+            $this->needCasco = $preferences->isNeedable();
+            $this->cascoPercentages = $preferences->getPercentages();
+            $this->cascoPrice = $preferences->setPrice($carPrice);
+        } elseif($preferences instanceof Insurance) {
+            $creditAmount = $this->getAmountOfCredit();
+            $this->needInsurance = $preferences->isNeedable();
+            $this->insurancePercentages = $preferences->getPercentages();
+            $this->insurancePrice = $preferences->setPrice($creditAmount);
+        } elseif($preferences instanceof Deferred) {
+            $carPrice = $this->carPrice;
+            $interestRate = $this->interestRate;
+            $this->needDeferred = $preferences->isNeedable();
+            $this->deferredPercentages = $preferences->getPercentages();
+            $this->deferredPrice = $preferences->setPrice($this->carPrice);
+            $this->deferredPercentagesPrice = $preferences->setDeferredPercentagesPrice($carPrice, $interestRate);
+        } else {
+            throw new \Exception('Некорректный аргумент');
+        }
+    }
+
+    /**
+     * @return float|int
+     */
+    protected function getInsuranceMonthlyPayment() {
+        return $this->insurancePrice / $this->creditTime;
+    }
 }
 
