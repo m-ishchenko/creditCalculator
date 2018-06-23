@@ -14,9 +14,8 @@ use img\credit_calculator\base\Booleans;
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @license BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
  * @version 2.0
- * @final
  */
-final class Insurance implements AdditionalPreferencesInterface
+class Insurance implements AdditionalPreferencesInterface
 {
 	/**
 	 * Необходимость расчета страхования жизни

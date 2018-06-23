@@ -17,9 +17,8 @@ use img\credit_calculator\services\CreditData;
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @license BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
  * @version 2.0
- * @final
  */
-final class AnnuityCalculator extends BaseCreditCalculator implements CreditCalculatorInterface
+class AnnuityCalculator extends BaseCreditCalculator implements CreditCalculatorInterface
 {
 	
 	/**

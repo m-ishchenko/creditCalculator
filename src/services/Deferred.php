@@ -19,9 +19,8 @@ use img\credit_calculator\base\Booleans;
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @license BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
  * @version 2.0
- * @final
  */
-final class Deferred implements CalculateDeferredInterface, AdditionalPreferencesInterface
+class Deferred implements CalculateDeferredInterface, AdditionalPreferencesInterface
 {
 	/**
 	 * Необходимость расчета отложенного платежа

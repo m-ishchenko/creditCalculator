@@ -13,9 +13,8 @@ use img\credit_calculator\base\Base;
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @license BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
  * @version 2.0
- * @final
  */
-final class CreditData implements CreditDataInterface
+class CreditData implements CreditDataInterface
 {
 	/**
 	 * Стоимость а/м
