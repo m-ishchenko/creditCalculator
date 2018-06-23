@@ -1,5 +1,11 @@
 <?php
-namespace img\credit_calculator;
+
+namespace img\credit_calculator\services;
+
+use img\credit_calculator\interfaces\AdditionalPreferencesInterface;
+use img\credit_calculator\interfaces\CalculateDeferredInterface;
+use img\credit_calculator\base\Base;
+use img\credit_calculator\base\Booleans;
 
 /**
  * Вспомогательный класс, предназначенный для передачи предварительно рассчитанных значений расчета отложенного платежа кредитному калькулятору
@@ -11,11 +17,11 @@ namespace img\credit_calculator;
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @package  Cars Credit Calculator
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @license BSD-3-Clause https://www.gnu.org/licenses/gpl-3.0.ru.html
- * @version 1.1
+ * @license BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
+ * @version 2.0
  * @final
  */
-final class Deferred
+final class Deferred implements CalculateDeferredInterface, AdditionalPreferencesInterface
 {
 	/**
 	 * Необходимость расчета отложенного платежа
@@ -33,22 +39,15 @@ final class Deferred
 	 */
 	private $deferredPercentages;
 
-	/**
-	 * Присваивает переданные классу при инициализации аргументы приватным свойствам
-	 * 
-	 * @param bool $needDeferred        необходимость расчета отложенного платежа
-	 * @param float $deferredPercentages процентная ставка для расчета отложенного платежа
-	 */
-	function __construct($needDeferred, $deferredPercentages = null)
+    /**
+     * Присваивает переданные классу при инициализации аргументы приватным свойствам
+     *
+     * @param bool|int $needDeferred необходимость расчета отложенного платежа
+     * @param float $deferredPercentages процентная ставка для расчета отложенного платежа
+     */
+	function __construct($needDeferred = 0, $deferredPercentages = null)
 	{
-	    if(Base::checkIsNull($needDeferred) && Base::checkIsNull($deferredPercentages)) {
-            if(!Base::validateNumbers($deferredPercentages, Base::FLOAT_VALIDATOR)) {
-                throw new \InvalidArgumentException('Размер отложенного платежа должен быть целым числом');
-            }
-		} else {
-		    throw new \InvalidArgumentException('Отложенный платеж. Переданы пустые значения');
-        }
-
+        Base::validateServiceInput($needDeferred, $deferredPercentages);
 		$this->needDeferred = Booleans::setBooleanValue($needDeferred);
 		$this->deferredPercentages = $deferredPercentages;
 	}
@@ -59,8 +58,8 @@ final class Deferred
 	 * @access  public
 	 * @return boolean необходимость учета отложенного платежа
 	 */
-	public function isNeedDeferred() {
-		return $this->needDeferred;
+    public function isNeedable() {
+		return ($this->needDeferred) ? $this->needDeferred : 0;
 	}
 
 	/**
@@ -69,7 +68,7 @@ final class Deferred
 	 * @access  public
 	 * @return float размер отложенного платежа, %
 	 */
-	public function getDeferredPercentages() {
+    public function getPercentages() {
 		return $this->deferredPercentages;
 	}
 
@@ -90,7 +89,7 @@ final class Deferred
 	 * @return  float
 	 */
 	public function setDeferredPercentagesPrice($carPrice, $interestRate) {
-		return $this->setDeferredPrice($carPrice) * $interestRate / (Base::PERCENTAGES_100 * Base::MONTHS_IN_YEAR);
+		return ($this->needDeferred) ? $this->setPrice($carPrice) * $interestRate / (Base::PERCENTAGES_100 * Base::MONTHS_IN_YEAR) : 0;
 	}
 
 	/**
@@ -108,7 +107,7 @@ final class Deferred
 	 * @param float $carPrice итоговая стоимость а/м
 	 * @return  float стоимость отложенного платежа, руб
 	 */
-	public function setDeferredPrice($carPrice) {
-		return $carPrice * $this->deferredPercentages / Base::PERCENTAGES_100;
+    public function setPrice($carPrice) {
+		return ($this->needDeferred) ? $carPrice * $this->deferredPercentages / Base::PERCENTAGES_100 : 0;
 	}
 }

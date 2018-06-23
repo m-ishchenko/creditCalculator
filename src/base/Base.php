@@ -1,6 +1,8 @@
 <?php
-namespace img\credit_calculator;
 
+namespace img\credit_calculator\base;
+
+use img\credit_calculator\interfaces\AdditionalPreferencesInterface;
 
 /**
  * Содержит значения, справедливые для всех объектов
@@ -8,7 +10,8 @@ namespace img\credit_calculator;
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @package  Cars Credit Calculator
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @license GPLv3 https://www.gnu.org/licenses/gpl-3.0.ru.html
+ * @license BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
+ * @version 2.0
  */
 class Base
 {
@@ -115,4 +118,20 @@ class Base
 		}
 		return false;
 	}
+
+
+    /**
+     * @param AdditionalPreferencesInterface $needable
+     * @param AdditionalPreferencesInterface $percentages
+     */
+    public static function validateServiceInput($needable, $percentages) {
+
+        if(Base::checkIsNull($needable) && Base::checkIsNull($percentages)){
+            if(!Base::validateNumbers($percentages, Base::FLOAT_VALIDATOR)) {
+                throw new \InvalidArgumentException('Размер процентной ставки должен быть целым числом');
+            }
+        } else {
+            throw new \InvalidArgumentException('Переданы пустые значения');
+        }
+    }
 }

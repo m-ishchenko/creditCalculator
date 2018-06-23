@@ -1,5 +1,9 @@
 <?php
-namespace img\credit_calculator;
+
+namespace img\credit_calculator\services;
+
+use img\credit_calculator\interfaces\CreditDataInterface;
+use img\credit_calculator\base\Base;
 
 /**
  * Вспомогательный класс, предназначенный для передачи значений условий кредита калькулятору
@@ -7,11 +11,11 @@ namespace img\credit_calculator;
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @package  Cars Credit Calculator
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @license BSD-3-Clause https://www.gnu.org/licenses/gpl-3.0.ru.html
- * @version 1.1
+ * @license BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
+ * @version 2.0
  * @final
  */
-final class CreditData
+final class CreditData implements CreditDataInterface
 {
 	/**
 	 * Стоимость а/м
@@ -52,23 +56,40 @@ final class CreditData
 	 * @param integer $firstPaymentPercentage размер первоначального взноса, %
 	 * @param integer $creditTime             срок кредитования, мес
 	 * @param float $interestRate           процентная ставка по кредиту, %
+     * @throws \InvalidArgumentException бросает исключение, если переданы некорректные значения
+     * @todo Пересмотреть валидацию аргументов конструктора
 	 */
 	function __construct($carPrice, $firstPaymentPercentage, $creditTime, $interestRate)
 	{
-		try {
-			Base::validateNumbers($carPrice, Base::FLOAT_VALIDATOR);
-			Base::validateNumbers($firstPaymentPercentage, Base::FLOAT_VALIDATOR);
-			Base::validateNumbers($creditTime, Base::INT_VALIDATOR);
-			Base::validateNumbers($interestRate, Base::FLOAT_VALIDATOR);
-		} catch (Exception $e) {
-			print('Ошибка валидации: ' .$e->getMessage());
-		}
-
+	    $this->validateInput($carPrice, $firstPaymentPercentage, $creditTime, $interestRate);
 		$this->carPrice = $carPrice;
 		$this->firstPaymentPercentage = $firstPaymentPercentage;
 		$this->creditTime = $creditTime;
 		$this->interestRate = $interestRate;
 	}
+
+    /**
+     * Валидация входных параметров
+     *
+     * @param $carPrice
+     * @param $firstPaymentPercentage
+     * @param $creditTime
+     * @param $interestRate
+     */
+	private function validateInput($carPrice, $firstPaymentPercentage, $creditTime, $interestRate) {
+        if(!Base::validateNumbers($carPrice, Base::FLOAT_VALIDATOR)) {
+            throw new \InvalidArgumentException('Ошибка валидации передаваемого значения');
+        }
+        if(!Base::validateNumbers($firstPaymentPercentage, Base::FLOAT_VALIDATOR)) {
+            throw new \InvalidArgumentException('Ошибка валидации передаваемого значения');
+        }
+        if(!Base::validateNumbers($creditTime, Base::FLOAT_VALIDATOR)) {
+            throw new \InvalidArgumentException('Ошибка валидации передаваемого значения');
+        }
+        if(!Base::validateNumbers($interestRate, Base::FLOAT_VALIDATOR)) {
+            throw new \InvalidArgumentException('Ошибка валидации передаваемого значения');
+        }
+    }
 
 	/**
 	 * Возвращает стоимость а/м

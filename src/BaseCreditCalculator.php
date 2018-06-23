@@ -1,6 +1,8 @@
 <?php
+
 namespace img\credit_calculator;
 
+use img\credit_calculator\base\Base;
 
 /**
  * Реализует базовые свойства и методы кредитного калькулятора
@@ -8,7 +10,7 @@ namespace img\credit_calculator;
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @package  Cars Credit Calculator
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @license BSD-3-Clause https://www.gnu.org/licenses/gpl-3.0.ru.html
+ * @license BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
  * @version 1.1
  */
 abstract class BaseCreditCalculator
@@ -124,111 +126,6 @@ abstract class BaseCreditCalculator
 	 * @var integer процентная ставка, %
 	 */
 	protected $interestRate;
-
-	/**
-	 * Стоимость а/м, руб
-	 * 
-	 * @access  public
-	 * @return float стоимость а/м, руб
-	 */
-	abstract public function getCarPrice();
-
-	/**
-	 * Расчет первоначального взноса, руб
-	 * 
-	 * @access  public
-	 * @return float первоначальный взнос, руб
-	 */
-	abstract public function getInitialPayment();
-
-	/**
-	 * Расчет суммы кредита, руб
-	 * 
-	 * @access  public
-	 * @return float сумма кредита, руб
-	 */
-	abstract public function getAmountOfCredit();
-
-	/**
-	 * Расчет первоначального взноса, %
-	 * 
-	 * @access  public
-	 * @return integer первоначальный взнос, %
-	 */
-	abstract public function getInitialPaymentPercentages();
-
-	/**
-	 * Срок кредита, мес
-	 * 
-	 * @access  public
-	 * @return integer срок кредита, мес
-	 */
-	abstract public function getCreditTime();
-
-	/**
-	 * Процентная ставка, %
-	 * 
-	 * @access  public
-	 * @return integer процентная ставка, %
-	 */
-	abstract public function getInterestRate();
-
-	/**
-	 * Расчет ежемесячного платежа, руб.
-	 * 
-	 * @access  public
-	 * @return float ежемесячный платеж, руб.
-	 */
-	abstract public function getMonthlyPayment();
-
-	/**
-	 * Расчет стоимости каско, руб
-	 * 
-	 * @access  public
-	 * @return float расчет стоимости каско, руб
-	 */
-	abstract public function getCascoPrice();
-
-	/**
-	 * Расчет стоимости страхования жизни, руб
-	 * 
-	 * @access  public
-	 * @return float расчет стоимости страхования жизни, руб
-	 */
-	abstract public function getInsurancePrice();
-
-	/**
-	 * Возвращает процентную ставку расчета КАСКО, %
-	 * 
-	 * @access  public
-	 * @return integer процентная ставка расчета КАСКО, %
-	 */
-	abstract public function getCascoPercentages();
-
-	/**
-	 * Возвращает процентную ставку расчета страхования жизни, %
-	 * 
-	 * @access  public
-	 * @return integer процентная ставка страхования жизни, %
-	 */
-	abstract public function getInsurancePercentages();
-
-	/**
-	 * Расчет стоимости остаточного платежа, руб.
-	 * 
-	 * @access  public
-	 * @return float стоимость остаточного платежа, руб.
-	 */
-	abstract public function getDeferredPaymentPrice();
-
-	/**
-	 * Возвращает процентную ставку отложенного платежа, %
-	 * 
-	 * @access  public
-	 * @return integer процентная ставка отложенного платежа, %
-	 */
-	abstract public function getDeferredPercentages();
-
 
 	/**
 	 * Расчет числового коэффициента значения процентной ставки

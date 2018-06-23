@@ -1,12 +1,8 @@
 <?php
-require __DIR__.'/../src/Casco.php';
-require __DIR__.'/../src/Insurance.php';
-require __DIR__.'/../src/Base.php';
-require __DIR__.'/../src/Booleans.php';
 
-use PHPUnit\Framework\TestCase;
-use img\credit_calculator\Casco;
+namespace img\tests\credit_calculator;
 
+use img\credit_calculator\services\Casco;
 
 /**
  * Class CascoTest
@@ -16,17 +12,17 @@ class CascoTest extends \PHPUnit\Framework\TestCase
     /**
      * Стоимость а/м
      */
-    const CAR_PRICE = 5100000;
+    private $carPrice = 5100000;
 
     /**
      * Стоимость КАСКО (1-й год)
      */
-    const CASCO_PRICE = 36210;
+    private $cascoPrice = 36210;
 
     /**
      * Процентная ставка КАСКО
      */
-    const CASCO_PERCENTAGES = 0.71;
+    private $cascoPercentages = 0.71;
 
     /**
      * @dataProvider cascoPriceProvider
@@ -35,7 +31,7 @@ class CascoTest extends \PHPUnit\Framework\TestCase
     public function testSetCascoPrice($needCasco, $cascoPercentages, $carPrice, $cascoPrice)
     {
         $casco = new Casco($needCasco, $cascoPercentages);
-        $this->assertEquals($cascoPrice, $casco->setCascoPrice($carPrice));
+        $this->assertEquals($cascoPrice, $casco->setPrice($carPrice));
     }
 
     /**
@@ -55,7 +51,7 @@ class CascoTest extends \PHPUnit\Framework\TestCase
     public function testCascoPercentages($needCasco, $cascoPercentages)
     {
         $casco = new Casco($needCasco, $cascoPercentages);
-        $this->assertEquals(static::CASCO_PERCENTAGES, $cascoPercentages);
+        $this->assertEquals($this->cascoPercentages, $cascoPercentages);
     }
 
     /**
@@ -65,8 +61,11 @@ class CascoTest extends \PHPUnit\Framework\TestCase
     public function testIsNeedCasco($needCasco, $cascoPercentages)
     {
         $casco = new Casco($needCasco, $cascoPercentages);
-        $this->assertInternalType('bool', $casco->isNeedCasco());
+        $this->assertInternalType('bool', $casco->isNeedable());
     }
+
+    //
+
 
     /**
      * Значения, используемые при тестировании расчета стоимости КАСКО
@@ -75,8 +74,8 @@ class CascoTest extends \PHPUnit\Framework\TestCase
     public function cascoPriceProvider()
     {
         return [
-            [1, static::CASCO_PERCENTAGES, static::CAR_PRICE, static::CASCO_PRICE],
-            [0, static::CASCO_PERCENTAGES, static::CAR_PRICE, static::CASCO_PRICE],
+            [1, $this->cascoPercentages, $this->carPrice, $this->cascoPrice],
+            [0, $this->cascoPercentages, $this->carPrice, $this->cascoPrice],
         ];
     }
 
@@ -99,8 +98,8 @@ class CascoTest extends \PHPUnit\Framework\TestCase
     public function cascoInitProvider()
     {
         return [
-            [true, static::CASCO_PERCENTAGES],
-            [false, static::CASCO_PERCENTAGES],
+            [true, $this->cascoPercentages],
+            [false, $this->cascoPercentages],
         ];
     }
 }

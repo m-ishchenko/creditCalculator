@@ -1,5 +1,10 @@
 <?php
-namespace img\credit_calculator;
+
+namespace img\credit_calculator\services;
+
+use img\credit_calculator\interfaces\AdditionalPreferencesInterface;
+use img\credit_calculator\base\Base;
+use img\credit_calculator\base\Booleans;
 
 /**
  * Страхование жизни - указанный процент от стоимости а/м
@@ -7,11 +12,11 @@ namespace img\credit_calculator;
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @package  Cars Credit Calculator
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @license BSD-3-Clause https://www.gnu.org/licenses/gpl-3.0.ru.html
- * @version 1.1
+ * @license BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
+ * @version 2.0
  * @final
  */
-final class Insurance
+final class Insurance implements AdditionalPreferencesInterface
 {
 	/**
 	 * Необходимость расчета страхования жизни
@@ -35,14 +40,7 @@ final class Insurance
      */
 	function __construct($needInsurance = 0, $insurancePercentages = null)
 	{
-        if(Base::checkIsNull($needInsurance) && Base::checkIsNull($insurancePercentages)){
-            if(!Base::validateNumbers($insurancePercentages, Base::FLOAT_VALIDATOR)) {
-                throw new \InvalidArgumentException('Процентная ставка страхования жизни должна быть числом');
-            }
-		} else {
-		    throw new \InvalidArgumentException('Страхование жизни. Переданы пустые значения');
-        }
-
+        Base::validateServiceInput($needInsurance, $insurancePercentages);
 		$this->needInsurance = Booleans::setBooleanValue($needInsurance);
 		$this->insurancePercentages = $insurancePercentages;
 	}
@@ -53,7 +51,7 @@ final class Insurance
 	 * @access  public
 	 * @return boolean необходимость учета страхования жизни
 	 */
-	public function isNeedInsurance() {
+    public function isNeedable() {
 		return $this->needInsurance;
 	}
 
@@ -63,7 +61,7 @@ final class Insurance
 	 * @access  public
 	 * @return float процентная ставка для расчета страхования жизни, %
 	 */
-	public function getInsurancePercentages() {
+    public function getPercentages() {
 		return $this->insurancePercentages;
 	}
 
@@ -81,7 +79,7 @@ final class Insurance
 	 * @param float $creditAmount сумма кредита, руб
 	 * @return float сумма страхования жизни, руб
 	 */
-	public function setInsurancePrice($creditAmount) {
+    public function setPrice($creditAmount) {
 		return ($this->needInsurance) ? $creditAmount * $this->insurancePercentages / Base::PERCENTAGES_100 : 0;
 	}
 }

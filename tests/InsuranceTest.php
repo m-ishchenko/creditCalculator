@@ -1,27 +1,30 @@
 <?php
 
-use img\credit_calculator\Base;
-use img\credit_calculator\Insurance;
+namespace img\tests\credit_calculator;
+
+use img\credit_calculator\base\Base;
+use img\credit_calculator\services\Insurance;
 
 /**
  * Class InsuranceTest
  */
 class InsuranceTest extends \PHPUnit\Framework\TestCase
 {
+
     /**
      * Сумма кредита
      */
-    const CREDIT_AMOUNT = 3595347;
+    private $creditAmount = 3595347;
 
     /**
      * Стоимость СЖ (1-й год)
      */
-    const INSURANCE_PRICE = 611209;
+    private $insurancePrice = 611209;
 
     /**
      * Процентная ставка СЖ
      */
-    const INSURANCE_PERCENTAGES = 17;
+    private $insurancePercentages = 17;
 
     /**
      * @dataProvider insurancePriceProvider
@@ -30,7 +33,7 @@ class InsuranceTest extends \PHPUnit\Framework\TestCase
     public function testSetInsurancePrice($needInsurance, $insurancePercentages, $creditAmount, $insurancePrice)
     {
         $insurance = new Insurance($needInsurance, $insurancePercentages);
-        $this->assertEquals($insurancePrice, Base::setRoundedValue($insurance->setInsurancePrice($creditAmount)));
+        $this->assertEquals($insurancePrice, Base::setRoundedValue($insurance->setPrice($creditAmount)));
     }
 
     /**
@@ -50,7 +53,7 @@ class InsuranceTest extends \PHPUnit\Framework\TestCase
     public function testInsurancePercentages($needInsurance, $insurancePercentages)
     {
         $insurance = new Insurance($needInsurance, $insurancePercentages);
-        $this->assertEquals(static::INSURANCE_PERCENTAGES, $insurance->getInsurancePercentages());
+        $this->assertEquals($this->insurancePercentages, $insurance->getPercentages());
     }
 
     /**
@@ -60,7 +63,7 @@ class InsuranceTest extends \PHPUnit\Framework\TestCase
     public function testIsNeedInsurance($needInsurance, $insurancePercentages)
     {
         $insurance = new Insurance($needInsurance, $insurancePercentages);
-        $this->assertInternalType('bool', $insurance->isNeedInsurance());
+        $this->assertInternalType('bool', $insurance->isNeedable());
     }
 
     /**
@@ -70,8 +73,8 @@ class InsuranceTest extends \PHPUnit\Framework\TestCase
     public function insurancePriceProvider()
     {
         return [
-            [1, static::INSURANCE_PERCENTAGES, static::CREDIT_AMOUNT, static::INSURANCE_PRICE],
-            [0, static::INSURANCE_PERCENTAGES, static::CREDIT_AMOUNT, static::INSURANCE_PRICE],
+            [1, $this->insurancePercentages, $this->creditAmount, $this->insurancePrice],
+            [0, $this->insurancePercentages, $this->creditAmount, $this->insurancePrice],
         ];
     }
 
@@ -94,8 +97,8 @@ class InsuranceTest extends \PHPUnit\Framework\TestCase
     public function insuranceInitProvider()
     {
         return [
-            [true, static::INSURANCE_PERCENTAGES],
-            [false, static::INSURANCE_PERCENTAGES],
+            [true, $this->insurancePercentages],
+            [false, $this->insurancePercentages],
         ];
     }
 }

@@ -4,27 +4,15 @@
  * Для генерации документации запустить
  * phpdoc -d path_to_project -t path_to_project\docs --template zend
  */
+require '../vendor/autoload.php';
 
-if(file_exists($_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php')) {
-    require $_SERVER['DOCUMENT_ROOT'].'/vendor/autoload.php';
-} else {
-    require __DIR__.'/../src/CreditData.php';
-    require __DIR__.'/../src/Base.php';
-    require __DIR__.'/../src/Casco.php';
-    require __DIR__.'/../src/Insurance.php';
-    require __DIR__.'/../src/Deferred.php';
-    require __DIR__.'/../src/AnnuityCalculator.php';
-    require __DIR__.'/../src/Booleans.php';
-}
 $config = include('config.inc.php');
 
-use img\credit_calculator\CreditData;
-use img\credit_calculator\Base;
-use img\credit_calculator\Casco;
-use img\credit_calculator\Insurance;
-use img\credit_calculator\Deferred;
+use img\credit_calculator\services\CreditData;
+use img\credit_calculator\services\Casco;
+use img\credit_calculator\services\Insurance;
+use img\credit_calculator\services\Deferred;
 use img\credit_calculator\AnnuityCalculator;
-use img\credit_calculator\Booleans;
 ?>
 
 <html>
@@ -129,9 +117,10 @@ use img\credit_calculator\Booleans;
 
 	<?php
 
-		$needCasco = isset($_GET['casco']) ? $_GET['casco'] : 0;
-		$needInsurance = isset($_GET['insurance']) ? $_GET['insurance'] : 0;
-		$needDeferred = isset($_GET['deferred']) ? $_GET['deferred'] : 0;
+		$needCasco = isset($_GET['casco']) ? $_GET['casco'] : false;
+		$needInsurance = isset($_GET['insurance']) ? $_GET['insurance'] : false;
+		$needDeferred = isset($_GET['deferred']) ? $_GET['deferred'] : false;
+		$deferredPayment = (isset($_GET['deferred']) && isset($_GET['deferredPayment'])) ? $_GET['deferredPayment'] : 0;
 
 		$credit = new CreditData($_GET['carPrice'], $_GET['firstPayment'], $_GET['creditTime'], $config->interestRate);
 		$casco = new Casco($needCasco, $config->cascoPercentages);

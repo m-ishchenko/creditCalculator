@@ -1,7 +1,10 @@
 <?php
-namespace img\credit_calculator;
-use img\credit_calculator\Base;
-use img\credit_calculator\Booleans;
+
+namespace img\credit_calculator\services;
+
+use img\credit_calculator\interfaces\AdditionalPreferencesInterface;
+use img\credit_calculator\base\Base;
+use img\credit_calculator\base\Booleans;
 
 /**
  * Вспомогательный класс, предназначенный для передачи предварительно рассчитанных значений расчета КАСКО кредитному калькулятор у КАСКО расчитывается по принципу получения процентной ставки на стоимость а/м.
@@ -10,11 +13,11 @@ use img\credit_calculator\Booleans;
  * @author Maxim Ishchenko <maxim.ishchenko@gmail.com>
  * @package  Cars Credit Calculator
  * @copyright Maxim Ishchenko <maxim.ishchenko@gmail.com>
- * @license BSD-3-Clause https://www.gnu.org/licenses/gpl-3.0.ru.html
- * @version 1.1
+ * @license BSD-3-Clause https://opensource.org/licenses/BSD-3-Clause
+ * @version 2.0
  * @final
  */
-final class Casco
+final class Casco implements AdditionalPreferencesInterface
 {
 	/**
 	 * Необходимость расчета КАСКО
@@ -40,14 +43,7 @@ final class Casco
      */
 	function __construct($needCasco = 0, $cascoPercentages = null)
 	{
-        if(Base::checkIsNull($cascoPercentages)) {
-            if(!Base::validateNumbers($cascoPercentages, Base::FLOAT_VALIDATOR)) {
-                throw new \InvalidArgumentException('Процентная ставка КАСКО должна быть числом');
-            }
-		} else {
-			throw new \InvalidArgumentException('КАСКО. Переданы пустые значения');
-        }
-
+        Base::validateServiceInput($needCasco, $cascoPercentages);
 		$this->needCasco = Booleans::setBooleanValue($needCasco);
 		$this->cascoPercentages = $cascoPercentages;
 	}
@@ -58,7 +54,7 @@ final class Casco
 	 * @access public
 	 * @return boolean необходимость учета каско
 	 */
-	public function isNeedCasco() {
+    public function isNeedable() {
 		return $this->needCasco;
 	}
 
@@ -67,7 +63,7 @@ final class Casco
 	 * @access public
 	 * @return float  размер процентной ставки КАСКО, %
 	 */
-	public function getCascoPercentages() {
+    public function getPercentages() {
 		return $this->cascoPercentages;
 	}
 
@@ -86,7 +82,7 @@ final class Casco
 	 * @param float $carPrice итоговая стоимость а/м
 	 * @return  float | 0 сумма затрат на оплату КАСКО
 	 */
-	public function setCascoPrice($carPrice) {
+    public function setPrice($carPrice) {
 		return ($this->needCasco) ? $carPrice * $this->cascoPercentages / Base::PERCENTAGES_100 : 0;
 	}
 }
